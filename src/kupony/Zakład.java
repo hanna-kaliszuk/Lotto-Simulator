@@ -28,6 +28,7 @@ public class Zakład {
         return trafienia;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < liczby.length; i++) {

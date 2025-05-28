@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Losowanie {
     private static final AtomicInteger licznik = new AtomicInteger(0);
-
     private final int nrLosowania;
     private final int[] wylosowaneLiczby;
 
@@ -48,7 +47,6 @@ public class Losowanie {
         return sb.toString();
     }
 
-    // Reset licznika (opcjonalnie, do testów)
     public static void resetLicznik() {
         licznik.set(0);
     }
