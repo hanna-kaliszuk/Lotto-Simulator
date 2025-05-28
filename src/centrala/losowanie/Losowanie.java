@@ -4,13 +4,16 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Losowanie {
-    private int nrLosowania;
-    private int[] wylosowaneLiczby;
+    private static final AtomicInteger licznik = new AtomicInteger(0);
 
-    public Losowanie(int numer) {
-        this.nrLosowania = numer;
+    private final int nrLosowania;
+    private final int[] wylosowaneLiczby;
+
+    public Losowanie() {
+        this.nrLosowania = licznik.incrementAndGet();
         this.wylosowaneLiczby = wylosujLiczby();
         Arrays.sort(this.wylosowaneLiczby);
     }
@@ -21,7 +24,9 @@ public class Losowanie {
             int liczba = ThreadLocalRandom.current().nextInt(1, 50);
             wynik.add(liczba);
         }
-        return wynik.stream().mapToInt(Integer::intValue).toArray();
+        return wynik.stream()
+                .mapToInt(Integer::intValue)
+                .toArray();
     }
 
     public int[] getWylosowaneLiczby() {
@@ -41,5 +46,10 @@ public class Losowanie {
             sb.append(String.format("%2d", liczba)).append(" ");
         }
         return sb.toString();
+    }
+
+    // Reset licznika (opcjonalnie, do testów)
+    public static void resetLicznik() {
+        licznik.set(0);
     }
 }
