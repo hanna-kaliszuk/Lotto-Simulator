@@ -26,7 +26,7 @@
     - środki finansowe
 
 #### podklasy:
-    1. [Go to Minimalista](#centrala)
+[Go to Minimalista](#minimalista)
     2. Losowy
     3. Stałoliczbowy
     4. Stałoblankietowy
