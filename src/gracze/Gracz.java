@@ -56,8 +56,6 @@ public abstract class Gracz {
 
     public abstract void kupKupon();
 
-    public abstract Zakład obstawZakład();
-
     protected void dodajKupon(Kupon kupon) {
         posiadaneKupony.add(kupon);
     }
