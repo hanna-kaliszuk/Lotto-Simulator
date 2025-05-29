@@ -5,11 +5,11 @@ public class BudżetPaństwa {
     private Kwota wydaneSubwencje;
 
     public void dodajPodatek(Kwota kwota) {
-        pobranePodatki = pobranePodatki.dodaj(kwota);
+        pobranePodatki.dodaj(kwota);
     }
 
     public void wydajSubwencję(Kwota kwota) {
-        wydaneSubwencje = wydaneSubwencje.dodaj(kwota);
+        wydaneSubwencje.dodaj(kwota);
     }
 
     public String raport() {

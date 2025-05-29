@@ -42,6 +42,22 @@ public class Kupon {
         sb.append("KUPON NR ");
         sb.append(this.getIdentyfikator() + "\n");
 
+        for (int i = 0; i < zakłady.size(); i++) {
+            sb.append(String.format("%d: ", i + 1));
+            sb.append(zakłady.get(i).toString()).append('\n');
+        }
+
+        sb.append("LICZBA LOSOWAŃ: ").append(nrLosowań.size()).append('\n');
+
+        sb.append("NUMERY LOSOWAŃ:\n ");
+        for (Integer integer : nrLosowań) {
+            sb.append(integer).append(' ');
+        }
+        sb.append('\n');
+
+        Kwota cena = policzCenę();
+        sb.append("CENA: ").append(cena.toString()).append('\n');
+
         return sb.toString();
     }
 

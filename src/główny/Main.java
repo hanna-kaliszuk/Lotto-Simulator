@@ -28,11 +28,13 @@ public class Main {
         System.out.printf("Hello and welcome!\n");
         //testLosowania();
         //testZakładów();
-        Zakład z = new Zakład(new int[] {1, 2, 3, 4, 5, 6});
+        Zakład z = new Zakład(new int[] {11, 12, 19, 23, 33, 43});
+        Zakład z2 = new Zakład(new int[] {4, 15, 24, 33, 35, 44 });
         List<Zakład> zakłady = new ArrayList<>();
         zakłady.add(z);
+        zakłady.add(z2);
 
-        Kupon k = new Kupon(1, zakłady, 1, 10);
+        Kupon k = new Kupon(1, zakłady, 8, 4);
         System.out.println(k);
     }
 }
