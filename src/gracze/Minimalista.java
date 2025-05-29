@@ -16,25 +16,18 @@ public class Minimalista extends Gracz {
     @Override
     public void kupKupon() {
         // generuj losowy zakład
-        Zakład zakład = this.obstawZakład();
+        Zakład zakład = new Zakład(generujLosoweLiczby(6));
 
-        // stwórz kupon z 1 zakładem na najbliższe losowanie
+        // wygeneruj kupon z 1 zakładem na najbliższe losowanie
         Kupon kupon = new Kupon(ulubionaKolektura, zakład, centrala.getNrNastępnegoLosowania(), 1);
 
         // sprawdź, czy gracz ma wystarczające środki na zakup kuponu
         if (!możeKupićKupon(kupon.getCena())) return;
 
         // jeżeli tak, to wydajemy mu kupon
-        else {
-            ulubionaKolektura.sprzedajKupon(kupon);
-            dodajKupon(kupon);
-            odejmijŚrodki(kupon.getCena());
-        }
+        ulubionaKolektura.sprzedajKupon(kupon);
+        dodajKupon(kupon);
+        this.odejmijŚrodki(kupon.getCena());
 
-    }
-
-    @Override
-    public Zakład obstawZakład() {
-        return new Zakład(generujLosoweLiczby(6));
     }
 }
