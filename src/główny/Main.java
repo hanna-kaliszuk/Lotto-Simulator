@@ -1,7 +1,11 @@
 package główny;
 
 import centrala.losowanie.Losowanie;
+import kupony.Kupon;
 import kupony.Zakład;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     private static void testLosowania() {
@@ -23,6 +27,12 @@ public class Main {
     public static void main(String[] args) {
         System.out.printf("Hello and welcome!\n");
         //testLosowania();
-        testZakładów();
+        //testZakładów();
+        Zakład z = new Zakład(new int[] {1, 2, 3, 4, 5, 6});
+        List<Zakład> zakłady = new ArrayList<>();
+        zakłady.add(z);
+
+        Kupon k = new Kupon(1, zakłady, 1, 10);
+        System.out.println(k);
     }
 }
