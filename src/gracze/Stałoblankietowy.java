@@ -43,16 +43,10 @@ public class Stałoblankietowy extends Gracz {
         // sprawdź, czy stać go na kupienie kuponu
         if (!możeKupićKupon(kupon.getCena())) return;
 
-        // jeżeli tak, to wydajemu mu kupon
+        // jeżeli tak, to wydajemy mu kupon
         kolektura.sprzedajKupon(kupon);
         dodajKupon(kupon);
         this.odejmijŚrodki(kupon.getCena());
-    }
-
-    @Override
-    public Zakład obstawZakład() {
-        // gracz ma już wypełniony blankiet, także nie ma konieczności wypełniania nowych zakładów
-        return null;
     }
 
     private Kolektura wybierzKolekturę() {
