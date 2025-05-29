@@ -1,28 +1,28 @@
 package kupony;
 
 import finanse.Kwota;
+import kolektura.Kolektura;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Kupon {
     private static final AtomicInteger globalnyLicznik = new AtomicInteger(0);
 
     private int nrPorządkowy;
-    private int nrKolektury;
+    private Kolektura Kolektura;
     private String identyfikator;
+    private Kwota cena;
     private boolean wykorzystany;
     private List<Zakład> zakłady;
     private List<Integer> nrLosowań;
 
-    public Kupon(int nrKolektury, List<Zakład> zakłady, int najbliższeLosowanie, int ileLosowań) {
-        assert zakłady.size() >= 1 && zakłady.size() <= 8: "Kupon musi zawierać od 1 do 8 zakładów";
+    public Kupon(Kolektura kolektura, List<Zakład> zakłady, int najbliższeLosowanie, int ileLosowań) {
+        assert !zakłady.isEmpty() && zakłady.size() <= 8: "Kupon musi zawierać od 1 do 8 zakładów";
         assert ileLosowań >= 1 && ileLosowań <= 10: "Kupon może obejmować jedynie od 1 do 10 losowań";
 
         this.nrPorządkowy = globalnyLicznik.incrementAndGet();
-        this.nrKolektury = nrKolektury;
+        this.Kolektura = kolektura;
         this.zakłady = zakłady;
         this.wykorzystany = false;
 
@@ -32,6 +32,15 @@ public class Kupon {
         }
 
         this.identyfikator = generujIdentyfikator();
+
+        Kwota cena = new Kwota(3, 0);
+        cena.pomnóż(zakłady.size());
+        cena.pomnóż(ileLosowań);
+        this.cena = cena;
+    }
+
+    public Kupon(Kolektura kolektura, Zakład zakład, int najbliższeLosowanie, int ileLosowań) {
+        this(kolektura, Collections.singletonList(zakład), najbliższeLosowanie, ileLosowań);
     }
 
     @Override
@@ -59,19 +68,10 @@ public class Kupon {
         sb.append('\n');
 
         // cena brutto kuponu
-        Kwota cena = policzCenę();
+        Kwota cena = this.cena;
         sb.append("CENA: ").append(cena).append('\n');
 
         return sb.toString();
-    }
-
-    private Kwota policzCenę() {
-        Kwota cena = new Kwota(0, 0);
-        cena.dodaj(new Kwota(3, 0));
-        cena.pomnóż(zakłady.size());
-        cena.pomnóż(nrLosowań.size());
-
-        return cena;
     }
 
     private String generujIdentyfikator() {
@@ -84,9 +84,9 @@ public class Kupon {
         }
 
         // obliczanie sumy kontrolnej
-        int sumaKontrolna = ObliczSumęKontrolną(nrPorządkowy, nrKolektury, znacznik.toString());
+        int sumaKontrolna = ObliczSumęKontrolną(nrPorządkowy, Kolektura.getID(), znacznik.toString());
 
-        String identyfikator = nrPorządkowy + "-" + nrKolektury + "-" + znacznik + "-" +
+        String identyfikator = nrPorządkowy + "-" + Kolektura + "-" + znacznik + "-" +
                 String.format("%02d", sumaKontrolna);
 
         return identyfikator;
@@ -121,5 +121,13 @@ public class Kupon {
 
     public void wykorzystajKupon() {
         this.wykorzystany = true;
+    }
+
+    public boolean czyWykorzystany() {
+        return wykorzystany;
+    }
+
+    public Kwota getCena() {
+        return new Kwota(this.cena.getZłote(), this.cena.getGrosze());
     }
 }
