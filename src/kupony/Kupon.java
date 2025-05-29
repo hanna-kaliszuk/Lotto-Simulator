@@ -1,6 +1,5 @@
 package kupony;
 
-import centrala.losowanie.Losowanie;
 import finanse.Kwota;
 
 import java.util.ArrayList;
@@ -33,7 +32,6 @@ public class Kupon {
         }
 
         this.identyfikator = generujIdentyfikator();
-
     }
 
     @Override
@@ -119,5 +117,9 @@ public class Kupon {
 
     public String getIdentyfikator() {
         return identyfikator;
+    }
+
+    public void wykorzystajKupon() {
+        this.wykorzystany = true;
     }
 }
