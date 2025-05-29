@@ -39,31 +39,37 @@ public class Kupon {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
+
+        // 1. identyfikator kuponu
         sb.append("KUPON NR ");
         sb.append(this.getIdentyfikator() + "\n");
 
+        // 2. ponumerowana lista kolejnych zakładów z wyrównanymi wylosowanymi liczbami do prawej
         for (int i = 0; i < zakłady.size(); i++) {
             sb.append(String.format("%d: ", i + 1));
             sb.append(zakłady.get(i).toString()).append('\n');
         }
 
+        // 3. liczba losowań
         sb.append("LICZBA LOSOWAŃ: ").append(nrLosowań.size()).append('\n');
 
+        // 4. lista numerów losowań
         sb.append("NUMERY LOSOWAŃ:\n ");
         for (Integer integer : nrLosowań) {
             sb.append(integer).append(' ');
         }
         sb.append('\n');
 
+        // cena brutto kuponu
         Kwota cena = policzCenę();
-        sb.append("CENA: ").append(cena.toString()).append('\n');
+        sb.append("CENA: ").append(cena).append('\n');
 
         return sb.toString();
     }
 
     private Kwota policzCenę() {
         Kwota cena = new Kwota(0, 0);
-        cena.dodaj(new Kwota(3, 0)); // dodajemy cenę bazową kuponu
+        cena.dodaj(new Kwota(3, 0));
         cena.pomnóż(zakłady.size());
         cena.pomnóż(nrLosowań.size());
 
