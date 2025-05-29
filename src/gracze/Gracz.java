@@ -2,7 +2,6 @@ package gracze;
 
 import centrala.Centrala;
 import finanse.Kwota;
-import kolektura.Kolektura;
 import kupony.Kupon;
 import kupony.Zakład;
 
@@ -14,8 +13,8 @@ public abstract class Gracz {
     protected int pesel;
     protected Kwota środki;
     protected List<Kupon> posiadaneKupony;
-    protected final Random r = new Random();
     protected Centrala centrala;
+    protected static final Random random = new Random();
 
     public Gracz(String imię, String nazwisko, int pesel, Kwota środki) {
         this.imię = imię;
@@ -81,7 +80,7 @@ public abstract class Gracz {
 
         int i = 0;
         while (i < liczba) {
-            int losowa = r.nextInt(49) + 1; // liczby od 1 do 49
+            int losowa = random.nextInt(49) + 1; // liczby od 1 do 49
 
             if (wylosowane.add(losowa)) {
                 liczby[i] = losowa;
