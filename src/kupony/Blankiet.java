@@ -16,7 +16,7 @@ public class Blankiet {
 
     public void dodajZakład(Zakład zakład) {
         if (zakłady.size() < MAX_ZAKŁADY) {
-            if (zakład.ważny())
+            if (zakład.czyWażny())
                 zakłady.add(zakład);
         }
     }
@@ -43,6 +43,4 @@ public class Blankiet {
 
         return sb.toString();
     }
-
-
 }
