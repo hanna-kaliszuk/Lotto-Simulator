@@ -36,14 +36,13 @@ public class Zakład {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        
-        // Convert array to Set for O(1) lookup
+
         Set<Integer> zaznaczoneLiczby = new HashSet<>();
         for (int liczba : liczby) {
             zaznaczoneLiczby.add(liczba);
         }
         
-        // Print numbers 1-49 in rows of 10
+        // wypisujemy 1-49 w rzędach
         for (int wiersz = 0; wiersz < 5; wiersz++) {
             int startLiczby = wiersz * 10 + 1;
             int endLiczby = Math.min(startLiczby + 9, 49);
@@ -76,5 +75,9 @@ public class Zakład {
 
     public void anulujZakład() {
         this.anulowany = true;
+    }
+
+    public boolean czyWażny() {
+        return ważny;
     }
 }
