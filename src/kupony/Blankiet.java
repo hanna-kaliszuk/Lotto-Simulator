@@ -6,24 +6,18 @@ import java.util.List;
 public class Blankiet {
     private static final int MAX_ZAKŁADY = 8;
 
-    private boolean[] liczbaLosowań;
+    private int ileLosowań;
     private List<Zakład> zakłady;
 
-    public Blankiet() {
+    public Blankiet(int losowania) {
         this.zakłady = new ArrayList<>();
-        this.liczbaLosowań = new boolean[10];
+        this.ileLosowań = losowania;
     }
 
     public void dodajZakład(Zakład zakład) {
         if (zakłady.size() < MAX_ZAKŁADY) {
             if (zakład.ważny())
                 zakłady.add(zakład);
-        }
-    }
-
-    public void zaznaczLiczbęLosowań(int liczba) {
-        if (liczba >= 1 && liczba <= 10) {
-            liczbaLosowań[liczba - 1] = true;
         }
     }
 
@@ -39,7 +33,7 @@ public class Blankiet {
         sb.append("Liczba losowań: ");
         for (int i = 1; i <= 10; i++) {
             sb.append(" [ ");
-            if (!liczbaLosowań[i - 1]) {
+            if (i - 1 == ileLosowań) {
                 sb.append(String.format("%2d", i));
             } else {
                 sb.append("--");
