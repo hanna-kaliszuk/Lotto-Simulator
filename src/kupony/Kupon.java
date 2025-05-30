@@ -86,7 +86,8 @@ public class Kupon {
         }
 
         // obliczanie sumy kontrolnej
-        int sumaKontrolna = ObliczSumęKontrolną(nrPorządkowy, Kolektura.getID(), znacznik.toString());
+        int sumaKontrolna = ObliczSumęKontrolną(nrPorządkowy, Kolektura.getNrKolektury(),
+                znacznik.toString());
 
         String identyfikator = nrPorządkowy + "-" + Kolektura + "-" + znacznik + "-" +
                 String.format("%02d", sumaKontrolna);
@@ -135,5 +136,20 @@ public class Kupon {
 
     public Kwota getCena() {
         return new Kwota(this.cena.getZłote(), this.cena.getGrosze());
+    }
+
+    public boolean zawieraLosowanie(int nrLosowania) {
+        return nrLosowań.contains(nrLosowania);
+    }
+
+    public List<Zakład> getZakłady() {
+        List<Zakład> kopia = new ArrayList<>(zakłady.size());
+
+        for (Zakład z : zakłady) {
+            kopia.add(z.kopia());
+        }
+
+        return kopia;
+
     }
 }
