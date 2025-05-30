@@ -3,6 +3,8 @@ package centrala;
 import centrala.losowanie.Losowanie;
 import finanse.Kwota;
 import kolektura.Kolektura;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,4 +31,21 @@ public class Centrala {
         return this.nrOstatniegoLosowania + 1;
     }
 
+    public List<Kolektura> getListaKolektur() {
+        List<Kolektura> kopia = new ArrayList<>(listaKolektur.size());
+
+        for (Kolektura k : listaKolektur) {
+            kopia.add(new Kolektura(k)); // pamiętaj, żeby dodać do kolektury odpowiedni konstruktor, ktróry bierze
+            // (Kolektura) jako argument
+        }
+        return kopia;
+    }
+
+    public int ileKolektur() {
+        return listaKolektur.size();
+    }
+
+    public Kolektura getKolektura(int indeks) {
+        return listaKolektur.get(indeks);
+    }
 }
