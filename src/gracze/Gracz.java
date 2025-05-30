@@ -15,7 +15,6 @@ public abstract class Gracz {
     protected Centrala centrala;
 
     protected static final Random random = new Random();
-    private static final int LICZBY_W_ZAKŁADZIE = 6;
 
     public Gracz(String imię, String nazwisko, int pesel, Kwota środki) {
         this.imię = imię;
@@ -56,35 +55,12 @@ public abstract class Gracz {
         posiadaneKupony.add(kupon);
     }
 
-    protected boolean możeKupićKupon(Kwota cenaKuponu) {
-        return maWystarczająceŚrodki(cenaKuponu);
-    }
-
-    private boolean maWystarczająceŚrodki(Kwota cena) {
+    protected boolean maWystarczająceŚrodki(Kwota cena) {
         return środki.porównaj(cena) >= 0;
     }
 
     protected void odejmijŚrodki(Kwota kwota) {
         this.środki.odejmij(kwota);
-    }
-
-    protected int[] generujLosoweLiczby() {
-        int[] liczby = new int[LICZBY_W_ZAKŁADZIE];
-        Set<Integer> wylosowane = new HashSet<>();
-
-        int i = 0;
-        while (i < LICZBY_W_ZAKŁADZIE) {
-            int losowa = random.nextInt(49) + 1; // liczby od 1 do 49
-
-            if (wylosowane.add(losowa)) {
-                liczby[i] = losowa;
-                i++;
-            }
-        }
-
-        // posortuj liczby dla lepszej czytelności
-        Arrays.sort(liczby);
-        return liczby;
     }
 
     protected void oddajKupon(Kupon kupon) {
