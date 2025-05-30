@@ -9,14 +9,30 @@ import java.util.List;
 
 
 public class Centrala {
+    private static Centrala instancja;
     private Kwota środkiFinansowe;
     private List<Kolektura> listaKolektur;
     private int nrOstatniegoLosowania = 0;
 
-    public Centrala(Kwota kwota, List<Kolektura> kolektury) {
+    private Centrala(Kwota kwota, List<Kolektura> kolektury) {
         this.środkiFinansowe = kwota;
         this.listaKolektur = kolektury;
     }
+
+    public static void inicjalizuj(Kwota kwota, List<Kolektura> kolektury) {
+        if (instancja == null) {
+            instancja = new Centrala(kwota, kolektury);
+        }
+    }
+
+    public static Centrala getInstancja() {
+        if (instancja == null) {
+            throw new IllegalStateException("Nie zainicjalizowano centrala");
+        }
+
+        return instancja;
+    }
+
 
     public void przeprowadźLosowanie() {
         Losowanie losowanie = new Losowanie();
