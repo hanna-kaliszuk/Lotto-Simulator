@@ -1,18 +1,19 @@
 package centrala.losowanie;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import finanse.Kwota;
+
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Losowanie {
-    private static final AtomicInteger licznik = new AtomicInteger(0);
     private final int nrLosowania;
     private final int[] wylosowaneLiczby;
+    private final Map<Integer, Integer> wygrane = new HashMap<>(); // Stopień -> liczba wygranych
+    private final Map<Integer, Kwota> nagrody = new HashMap<>();   // Stopień -> kwota nagrody
 
-    public Losowanie() {
-        this.nrLosowania = licznik.incrementAndGet();
+    public Losowanie(int numer) {
+        this.nrLosowania = numer;
         this.wylosowaneLiczby = wylosujLiczby();
         Arrays.sort(this.wylosowaneLiczby);
     }
@@ -45,9 +46,5 @@ public class Losowanie {
             sb.append(String.format("%2d", liczba)).append(" ");
         }
         return sb.toString();
-    }
-
-    public static void resetLicznik() {
-        licznik.set(0);
     }
 }
