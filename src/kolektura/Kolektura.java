@@ -66,19 +66,19 @@ public class Kolektura {
     }
 
     private boolean sprawdźKupon(Kupon kupon) { // sprawdź, czy kupiony w tej kolekturze
-
+        return false;
     }
 
     private boolean sprawdźCzyNieZrealizowany(Kupon kupon) { // sprawdź, czy nagroda nie została już wypłacona
-
+        return false;
     }
 
     private Kwota obliczWysokośćWygranej() {
-
+        return null;
     }
 
     private Kwota odbliczPodatekOdWygranej() {
-
+        return null;
     }
 
     // obsługa finansowa
@@ -90,13 +90,12 @@ public class Kolektura {
 
         budżetPaństwa.dodajPodatek(podatek);
 
-        Kwota zysk = new Kwota(kwota.getZłote(), kwota.getGrosze());
-        zysk.odejmij(podatek);
-        centrala.dodajZysk(zysk);
+        // przekazanie zysku ze sprzedaży do centrali następuje w logice losowania, a konkretniej przy ustalaniu puli
+        // nagród
     }
 
     private Kwota pobierzŚrodkiNaWygraną(Kwota kwota) {
-
+        return null;
     }
 
     // pomocnicze
@@ -123,4 +122,7 @@ public class Kolektura {
         return liczby;
     }
 
+    public Kupon[] getSprzedaneKupony() {
+        return null;
+    }
 }
