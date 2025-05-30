@@ -59,5 +59,10 @@ public class Losowy extends Gracz {
         }
     }
 
+    private Kolektura wybierzKolekturę() {
+        int indeksKolektury = random.nextInt(centrala.ileKolektur());
+        return centrala.getKolektura(indeksKolektury);
+    }
+
 
 }
