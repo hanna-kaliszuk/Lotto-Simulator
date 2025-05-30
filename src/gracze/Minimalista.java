@@ -1,5 +1,6 @@
 package gracze;
 
+import finanse.BudżetPaństwa;
 import finanse.Kwota;
 import kolektura.Kolektura;
 import kupony.Kupon;
@@ -15,19 +16,14 @@ public class Minimalista extends Gracz {
 
     @Override
     public void kupKupon() {
-        // generuj losowy zakład
-        Zakład zakład = new Zakład(generujLosoweLiczby(6));
+        // obstawia 1 zakład na chybiłtrafił na najbliższe losowanie
+        // sprawdzamy czy stać go na zakup kuponu
+        Kwota cena = new Kwota(3, 0);
+        if (!maWystarczająceŚrodki(cena)) return;
 
-        // wygeneruj kupon z 1 zakładem na najbliższe losowanie
-        Kupon kupon = new Kupon(ulubionaKolektura, zakład, centrala.getNrNastępnegoLosowania(), 1);
-
-        // sprawdź, czy gracz ma wystarczające środki na zakup kuponu
-        if (!możeKupićKupon(kupon.getCena())) return;
-
-        // jeżeli tak, to wydajemy mu kupon
-        ulubionaKolektura.sprzedajKupon(kupon);
+        // jeżeli tak, to pobieramy zapłatę i wydajemy kupon
+        this.odejmijŚrodki(cena);
+        Kupon kupon = ulubionaKolektura.sprzedajKuponChybiłTrafił(1, 1);
         dodajKupon(kupon);
-        this.odejmijŚrodki(kupon.getCena());
-
     }
 }
