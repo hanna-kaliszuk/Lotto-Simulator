@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Zakład {
-    private final int[] liczby;
+    private int[] liczby;
     private boolean ważny;
     private boolean anulowany;
 
@@ -20,6 +20,9 @@ public class Zakład {
         }
 
         this.anulowany = false;
+    }
+
+    public Zakład() {
     }
 
     public int ileTrafień(int[] wylosowane) {
@@ -79,5 +82,18 @@ public class Zakład {
 
     public boolean czyWażny() {
         return ważny;
+    }
+
+    private boolean czyAnulowany() {
+        return this.anulowany;
+    }
+
+    Zakład kopia() {
+        Zakład kopia = new Zakład();
+        kopia.liczby = this.liczby.clone();
+        kopia.anulowany = this.czyAnulowany();
+        kopia.ważny = this.czyWażny();
+
+        return kopia;
     }
 }
