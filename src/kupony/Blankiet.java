@@ -4,21 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Blankiet {
-    private static final int MAX_ZAKŁADY = 8;
-
     private int ileLosowań;
     private List<Zakład> zakłady;
 
-    public Blankiet(int losowania) {
-        this.zakłady = new ArrayList<>();
+    public Blankiet(List<Zakład> zakłady, int losowania) {
+        this.zakłady = zakłady;
         this.ileLosowań = losowania;
-    }
-
-    public void dodajZakład(Zakład zakład) {
-        if (zakłady.size() < MAX_ZAKŁADY) {
-            if (zakład.czyWażny())
-                zakłady.add(zakład);
-        }
     }
 
     @Override
@@ -42,5 +33,23 @@ public class Blankiet {
         }
 
         return sb.toString();
+    }
+
+    public List<Zakład> getListaZakładów() {
+        List<Zakład> kopia = new ArrayList<>(zakłady.size());
+
+        for (Zakład z : zakłady) {
+            kopia.add(z.kopia());
+        }
+
+        return kopia;
+    }
+
+    public int naIleLosowań() {
+        return ileLosowań;
+    }
+
+    public int ileZakładów() {
+        return zakłady.size();
     }
 }
