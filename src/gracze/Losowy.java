@@ -37,13 +37,7 @@ public class Losowy extends Gracz {
             // na ile losowań będzie kupon
             int liczbaLosowań = random.nextInt(10) + 1;
 
-            // obliczamy cenę kuponu
-            Kwota cena = obliczCenęKuponu(liczbaZakładów, liczbaLosowań);
-
-            // sprawdź, czy go stać
-            if (!możeKupićKupon(cena)) break;
-
-            // jeżeli może, to generujemy zakłady do kuponu i sam kupon
+            // generujemy zakłady do kuponu i sam kupon
             List<Zakład> zakłady = new LinkedList<>();
 
             for (int k = 0; k < liczbaZakładów; k++) {
@@ -54,12 +48,16 @@ public class Losowy extends Gracz {
             Kupon kupon = new Kupon(kolektura, zakłady, centrala.getNrNastępnegoLosowania(),
                     liczbaLosowań);
 
-            // wydaj graczowi kupon
+
+            // sprawdź, czy go stać na ten konkretny kupon
+            if (!możeKupićKupon(kupon.getCena())) continue;
+
+            // jak tak, wydaj graczowi kupon
             kolektura.sprzedajKupon(kupon);
             dodajKupon(kupon);
-            this.odejmijŚrodki(cena);
+            this.odejmijŚrodki(kupon.getCena());
         }
-
-
     }
+
+
 }
