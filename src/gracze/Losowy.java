@@ -6,22 +6,12 @@ import kupony.Kupon;
 import kupony.Zakład;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 public class Losowy extends Gracz {
     public Losowy(String imię, String nazwisko, int pesel){
         super(imię, nazwisko, pesel, generujLosoweŚrodki());
     }
-
-    private static Kwota generujLosoweŚrodki() {
-        int złote = random.nextInt(100000);
-        int grosze = random.nextInt(100);
-
-        return new Kwota(złote, grosze);
-    }
-
 
     @Override
     public void kupKupon() {
@@ -31,38 +21,36 @@ public class Losowy extends Gracz {
             // wybieramy losową kolekturę
             Kolektura kolektura = this.wybierzKolekturę();
 
-            // ile zakładów obstawi tym razem
+            // ile zakładów obstawi tym razem (od 1 do 8)
             int liczbaZakładów = random.nextInt(8) + 1;
 
-            // na ile losowań będzie kupon
+            // na ile losowań będzie kupon (od 1 do 10)
             int liczbaLosowań = random.nextInt(10) + 1;
-
-            // generujemy zakłady do kuponu i sam kupon
-            List<Zakład> zakłady = new LinkedList<>();
-
-            for (int k = 0; k < liczbaZakładów; k++) {
-                Zakład z = new Zakład(generujLosoweLiczby(6));
-                zakłady.add(z);
-            }
-
-            Kupon kupon = new Kupon(kolektura, zakłady, centrala.getNrNastępnegoLosowania(),
-                    liczbaLosowań);
 
 
             // sprawdź, czy go stać na ten konkretny kupon
-            if (!możeKupićKupon(kupon.getCena())) continue;
+            // jeżeli nie, przejdź do generowania kolejnego, losowego kuponu
+            Kwota cena = new Kwota(3, 0);
+            cena.pomnóż(liczbaLosowań);
+            cena.pomnóż(liczbaZakładów);
+            if (!maWystarczająceŚrodki(cena)) continue;
 
-            // jak tak, wydaj graczowi kupon
-            kolektura.sprzedajKupon(kupon);
+            // jak tak, pobierz zapłatę i wydaj kupon
+            this.odejmijŚrodki(cena);
+            Kupon kupon = kolektura.sprzedajKuponChybiłTrafił(liczbaZakładów, liczbaLosowań);
             dodajKupon(kupon);
-            this.odejmijŚrodki(kupon.getCena());
         }
+    }
+
+    private static Kwota generujLosoweŚrodki() {
+        int złote = random.nextInt(100000);
+        int grosze = random.nextInt(100);
+
+        return new Kwota(złote, grosze);
     }
 
     private Kolektura wybierzKolekturę() {
         int indeksKolektury = random.nextInt(centrala.ileKolektur());
         return centrala.getKolektura(indeksKolektury);
     }
-
-
 }
