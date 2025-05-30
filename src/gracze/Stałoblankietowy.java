@@ -4,7 +4,6 @@ import finanse.Kwota;
 import kolektura.Kolektura;
 import kupony.Blankiet;
 import kupony.Kupon;
-import kupony.Zakład;
 
 import java.util.List;
 
@@ -29,24 +28,25 @@ public class Stałoblankietowy extends Gracz {
     @Override
     public void kupKupon() {
         // jeżeli nie zgadza się odstęp pomiędzy losowaniami, to nie robimy nic
-        if (!następneLosowanie()) return;
+        if (!bierzeUdziałWLosowaniu()) return;
 
         // wybierz kolejną kolekturę w kolejce
         Kolektura kolektura = this.wybierzKolekturę();
 
-        // stwórz listę zakładów na podstawie blankietu
-        List<Zakład> zakłady = blankiet.stwórzListęZakładów();
-
-        // wygeneruj kupon na podstawie blankietu
-        Kupon kupon = new Kupon(kolektura, zakłady, centrala.getNrNastępnegoLosowania(), blankiet.naIleLosowań());
+        int ileLosowań = blankiet.naIleLosowań();
+        int ileZakładów = blankiet.ileZakładów();
 
         // sprawdź, czy stać go na kupienie kuponu
-        if (!możeKupićKupon(kupon.getCena())) return;
+        Kwota cena = new Kwota(3, 0);
+        cena.pomnóż(ileLosowań);
+        cena.pomnóż(ileZakładów);
 
-        // jeżeli tak, to wydajemy mu kupon
-        kolektura.sprzedajKupon(kupon);
+        if (!maWystarczająceŚrodki(cena)) return;
+
+        // jeżeli tak, to pobieramy zapłatę i wydajemy kupon
+        this.odejmijŚrodki(cena);
+        Kupon kupon = kolektura.sprzedajKuponZBlankietu(blankiet);
         dodajKupon(kupon);
-        this.odejmijŚrodki(kupon.getCena());
     }
 
     private Kolektura wybierzKolekturę() {
@@ -55,7 +55,7 @@ public class Stałoblankietowy extends Gracz {
         return kolektura;
     }
 
-    private boolean następneLosowanie() {
+    private boolean bierzeUdziałWLosowaniu() {
         globalnyLicznikLosowań = centrala.getNrNastępnegoLosowania() - 1;
 
         if (ostatnieLosowanie == 0) { // pierwsze losowanie dla tego gracza

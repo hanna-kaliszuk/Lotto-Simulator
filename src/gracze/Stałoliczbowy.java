@@ -2,6 +2,7 @@ package gracze;
 
 import finanse.Kwota;
 import kolektura.Kolektura;
+import kupony.Blankiet;
 import kupony.Kupon;
 import kupony.Zakład;
 
@@ -34,18 +35,24 @@ public class Stałoliczbowy extends Gracz {
         // wybierz kolejną kolekturę w kolejce
         Kolektura kolektura = this.wybierzKolekturę();
 
-        // przygotuj kupon z 1 zakładem z ulubionymi liczbami
-        List<Zakład> zakłady = new ArrayList<>();
+        // przygotuj blankiet z ulubionymi liczbami
+        List<Zakład> zakłady = new ArrayList<>(1);
         zakłady.add(zakład);
-        Kupon kupon = new Kupon(kolektura, zakłady, centrala.getNrNastępnegoLosowania(), 10);
+
+        Blankiet blankiet = new Blankiet(zakłady, 10);
 
         // sprawdź, czy stać go na kupienie kuponu
-        if (!możeKupićKupon(kupon.getCena())) return;
+        Kwota cena = new Kwota(3, 0);
+        cena.pomnóż(10); // 10 losowań
+        cena.pomnóż(1); // 1 zakład
 
-        // jeżeli tak, to wydajemy kupon
-        kolektura.sprzedajKupon(kupon);
+        // sprawdź, czy stać go na kupienie kuponu
+        if (!maWystarczająceŚrodki(cena)) return;
+
+        // jeżeli tak, to pobieramy zapłatę i wydajemy kupon
+        this.odejmijŚrodki(cena);
+        Kupon kupon = kolektura.sprzedajKuponZBlankietu(blankiet);
         dodajKupon(kupon);
-        this.odejmijŚrodki(kupon.getCena());
     }
 
     private Kolektura wybierzKolekturę() {
