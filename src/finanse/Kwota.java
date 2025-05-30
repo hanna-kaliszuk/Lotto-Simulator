@@ -10,6 +10,10 @@ public class Kwota {
         this.grosze = 100 * złote + grosze;
     }
 
+    public Kwota(Kwota k) {
+        this(k.getZłote(), k.getGrosze());
+    }
+
     // Konstruktor pomocniczy dla operacji wewnętrznych
     private Kwota(long totalGrosze) {
         this.grosze = totalGrosze;

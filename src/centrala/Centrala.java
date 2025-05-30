@@ -69,9 +69,9 @@ public class Centrala {
         przychódNetto.pomnóż(0.8); // 20% podatku
 
         // 5. obliczamy pulę nagród (51% przychodu netto)
-        Kwota pulaNagród = new Kwota(przychódNetto.getZłote(), przychódNetto.getGrosze());
+        Kwota pulaNagród = new Kwota(przychódNetto);
         pulaNagród.pomnóż(0.51);
-        Kwota zysk = new Kwota(przychódNetto.getZłote(), przychódNetto.getGrosze());
+        Kwota zysk = new Kwota(przychódNetto);
         zysk.odejmij(pulaNagród);
         this.dodajZysk(zysk); // zysk centrali
 
@@ -106,6 +106,7 @@ public class Centrala {
     }
 
     private void obliczNagrody(Losowanie losowanie, Kwota pula, Map<Integer, Integer> trafienia) {
+
     }
 
     private void dodajZysk(Kwota kwota) {
