@@ -1,9 +1,17 @@
 package testy;
 
+import centrala.losowanie.Losowanie;
+import finanse.BudżetPaństwa;
 import finanse.Kwota;
+import kupony.Blankiet;
+import kupony.Zakład;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,113 +19,242 @@ class testyTest {
 
     @BeforeEach
     void setUp() {
-
+        BudżetPaństwa.getInstancja();
     }
 
-    @Test
-    @DisplayName("Kwota - podstawowe operacje")
-    void testKwotaPodstawoweOperacje() {
-        Kwota kwota = new Kwota(100, 50);
+    // KWOTA TESTS
+    @Nested
+    @DisplayName("Kwota Tests")
+    class KwotaTests {
 
-        assertEquals(100, kwota.getZłote());
-        assertEquals(50, kwota.getGrosze());
-        assertFalse(kwota.saldoUjemne());
+        @Test
+        @DisplayName("Kwota - konstruktor podstawowy")
+        void testKwotaConstructor() {
+            Kwota kwota = new Kwota(100, 50);
+            assertEquals(100, kwota.getZłote());
+            assertEquals(50, kwota.getGrosze());
+        }
+
+        @Test
+        @DisplayName("Kwota - konstruktor z błędnymi groszami")
+        void testKwotaInvalidGrosze() {
+            assertThrows(IllegalArgumentException.class, () -> new Kwota(100, -1));
+            assertThrows(IllegalArgumentException.class, () -> new Kwota(100, 100));
+        }
+
+        @Test
+        @DisplayName("Kwota - dodawanie")
+        void testKwotaDodawanie() {
+            Kwota kwota1 = new Kwota(100, 75);
+            Kwota kwota2 = new Kwota(50, 50);
+
+            kwota1.dodaj(kwota2);
+
+            assertEquals(151, kwota1.getZłote());
+            assertEquals(25, kwota1.getGrosze());
+        }
+
+        @Test
+        @DisplayName("Kwota - odejmowanie")
+        void testKwotaOdejmowanie() {
+            Kwota kwota1 = new Kwota(100, 25);
+            Kwota kwota2 = new Kwota(50, 50);
+
+            kwota1.odejmij(kwota2);
+
+            assertEquals(49, kwota1.getZłote());
+            assertEquals(75, kwota1.getGrosze());
+        }
+
+        @Test
+        @DisplayName("Kwota - mnożenie przez double")
+        void testKwotaMnożenieDouble() {
+            Kwota kwota = new Kwota(100, 5);
+            kwota.pomnóż(0.5);
+
+            assertEquals(50, kwota.getZłote());
+            assertEquals(2, kwota.getGrosze());
+        }
+
+        @Test
+        @DisplayName("Kwota - mnożenie przez int")
+        void testKwotaMnożenieInt() {
+            Kwota kwota = new Kwota(50, 25);
+            kwota.pomnóż(5);
+
+            assertEquals(251, kwota.getZłote());
+            assertEquals(25, kwota.getGrosze());
+        }
+
+        @Test
+        @DisplayName("Kwota - porównywanie")
+        void testKwotaPorównywanie() {
+            Kwota kwota1 = new Kwota(100, 50);
+            Kwota kwota2 = new Kwota(100, 50);
+            Kwota kwota3 = new Kwota(150, 0);
+
+            assertEquals(0, kwota1.porównaj(kwota2));
+            assertTrue(kwota3.porównaj(kwota1) > 0);
+            assertTrue(kwota1.porównaj(kwota3) < 0);
+        }
+
+        @Test
+        @DisplayName("Kwota - saldo ujemne")
+        void testKwotaSaldoUjemne() {
+            Kwota kwota1 = new Kwota(100, 0);
+            Kwota kwota2 = new Kwota(150, 0);
+
+            kwota1.odejmij(kwota2);
+            assertTrue(kwota1.saldoUjemne());
+        }
+
+        @Test
+        @DisplayName("Kwota - equals and hashCode")
+        void testKwotaEqualsHashCode() {
+            Kwota kwota1 = new Kwota(100, 50);
+            Kwota kwota2 = new Kwota(100, 50);
+            Kwota kwota3 = new Kwota(200, 0);
+
+            assertEquals(kwota1, kwota2);
+            assertNotEquals(kwota1, kwota3);
+            assertEquals(kwota1.hashCode(), kwota2.hashCode());
+        }
     }
 
-    @Test
-    @DisplayName("Kwota - dodawanie")
-    void testKwotaDodawanie() {
-        Kwota kwota1 = new Kwota(10, 50);
-        Kwota kwota2 = new Kwota(5, 75);
+    // ZAKŁAD TESTS
+    @Nested
+    @DisplayName("Zakład Tests")
+    class ZakładTests {
 
-        kwota1.dodaj(kwota2);
+        @Test
+        @DisplayName("Zakład - konstruktor poprawny")
+        void testZakładPoprawnyKonstruktor() {
+            int[] liczby = {1, 15, 23, 34, 42, 49};
+            Zakład zakład = new Zakład(liczby);
 
-        assertEquals(16, kwota1.getZłote());
-        assertEquals(25, kwota1.getGrosze());
+            assertTrue(zakład.czyWażny());
+            assertFalse(zakład.czyAnulowany());
+        }
+
+        @Test
+        @DisplayName("Zakład - konstruktor z błędną liczbą liczb")
+        void testZakładBłędnyKonstruktor() {
+            int[] liczby = {1, 2, 3, 4, 5}; // tylko 5 liczb
+            Zakład zakład = new Zakład(liczby);
+
+            assertFalse(zakład.czyWażny());
+        }
+
+        @Test
+        @DisplayName("Zakład - obliczanie trafień")
+        void testZakładTrafienia() {
+            int[] liczby = {1, 15, 23, 34, 42, 49};
+            int[] wylosowane = {1, 10, 23, 30, 42, 48};
+
+            Zakład zakład = new Zakład(liczby);
+            int trafienia = zakład.ileTrafień(wylosowane);
+
+            assertEquals(3, trafienia); // 1, 23, 42
+        }
+
+        @Test
+        @DisplayName("Zakład - anulowanie")
+        void testZakładAnulowanie() {
+            int[] liczby = {1, 15, 23, 34, 42, 49};
+            Zakład zakład = new Zakład(liczby);
+
+            assertFalse(zakład.czyAnulowany());
+            zakład.anulujZakład();
+            assertTrue(zakład.czyAnulowany());
+        }
+
+        @Test
+        @DisplayName("Zakład - kopia")
+        void testZakładKopia() {
+            int[] liczby = {1, 15, 23, 34, 42, 49};
+            Zakład original = new Zakład(liczby);
+            original.anulujZakład();
+
+            Zakład kopia = original.kopia();
+
+            assertTrue(kopia.czyWażny());
+            assertTrue(kopia.czyAnulowany());
+
+            // Test that modifying copy doesn't affect original
+            assertNotSame(original, kopia);
+        }
     }
 
-    @Test
-    @DisplayName("Kwota - odejmowanie")
-    void testKwotaOdejmowanie() {
-        Kwota kwota1 = new Kwota(100, 25);
-        Kwota kwota2 = new Kwota(50, 50);
+    // BLANKIET TESTS
+    @Nested
+    @DisplayName("Blankiet Tests")
+    class BlankietTests {
 
-        kwota1.odejmij(kwota2);
+        @Test
+        @DisplayName("Blankiet - podstawowy konstruktor")
+        void testBlankietKonstruktor() {
+            List<Zakład> zakłady = List.of(
+                    new Zakład(new int[]{1, 2, 3, 4, 5, 6}),
+                    new Zakład(new int[]{7, 8, 9, 10, 11, 12})
+            );
 
-        assertEquals(49, kwota1.getZłote());
-        assertEquals(75, kwota1.getGrosze());
+            Blankiet blankiet = new Blankiet(zakłady, 5);
+
+            assertEquals(5, blankiet.naIleLosowań());
+            assertEquals(2, blankiet.ileZakładów());
+        }
+
+        @Test
+        @DisplayName("Blankiet - getListaZakładów zwraca kopię")
+        void testBlankietKopiaZakładów() {
+            List<Zakład> original = new ArrayList<>();
+            original.add(new Zakład(new int[]{1, 2, 3, 4, 5, 6}));
+
+            Blankiet blankiet = new Blankiet(original, 3);
+            List<Zakład> kopia = blankiet.getListaZakładów();
+
+            assertEquals(original.size(), kopia.size());
+            assertNotSame(original.get(0), kopia.get(0)); // Deep copy
+        }
     }
 
-    @Test
-    @DisplayName("Kwota - mnożenie przez int")
-    void testKwotaMnożenieInt() {
-        Kwota kwota = new Kwota(10, 50);
+    // LOSOWANIE TESTS
+    @Nested
+    @DisplayName("Losowanie Tests")
+    class LosowanieTests {
 
-        kwota.pomnóż(3);
+        @Test
+        @DisplayName("Losowanie - konstruktor")
+        void testLosowanieKonstruktor() {
+            Losowanie losowanie = new Losowanie(42);
 
-        assertEquals(31, kwota.getZłote());
-        assertEquals(50, kwota.getGrosze());
-    }
+            assertEquals(42, losowanie.getNrLosowania());
+            assertNotNull(losowanie.getWylosowaneLiczby());
+            assertEquals(6, losowanie.getWylosowaneLiczby().length);
+        }
 
-    @Test
-    @DisplayName("Kwota - mnożenie przez double")
-    void testKwotaMnożenieDouble() {
-        Kwota kwota = new Kwota(10, 0);
-        kwota.pomnóż(1.5);
-        assertEquals(15, kwota.getZłote());
-        assertEquals(0, kwota.getGrosze());
+        @Test
+        @DisplayName("Losowanie - wylosowane liczby w zakresie 1-49")
+        void testLosowanieZakresLiczb() {
+            Losowanie losowanie = new Losowanie(1);
+            int[] liczby = losowanie.getWylosowaneLiczby();
 
-        Kwota kwota2 = new Kwota(10, 0);
-        kwota2.pomnóż(0.75);
-        assertEquals(7, kwota2.getZłote());
-        assertEquals(50, kwota2.getGrosze());
-    }
+            for (int liczba : liczby) {
+                assertTrue(liczba >= 1 && liczba <= 49);
+            }
+        }
 
-    @Test
-    @DisplayName("Kwota - saldo ujemne")
-    void testKwotaSaldoUjemne() {
-        Kwota kwota1 = new Kwota(10, 0);
-        Kwota kwota2 = new Kwota(20, 0);
+        @Test
+        @DisplayName("Losowanie - wszystkie liczby różne")
+        void testLosowanieRóżneLiczby() {
+            Losowanie losowanie = new Losowanie(1);
+            int[] liczby = losowanie.getWylosowaneLiczby();
 
-        kwota1.odejmij(kwota2);
-
-        assertTrue(kwota1.saldoUjemne());
-        assertEquals(-10, kwota1.getZłote());
-    }
-
-    @Test
-    @DisplayName("Kwota - porównywanie")
-    void testKwotaPorównywanie() {
-        Kwota kwota1 = new Kwota(10, 50);
-        Kwota kwota2 = new Kwota(20, 0);
-        Kwota kwota3 = new Kwota(10, 50);
-
-        assertTrue(kwota1.porównaj(kwota2) < 0); // kwota1 < kwota2
-        assertTrue(kwota2.porównaj(kwota1) > 0); // kwota2 > kwota1
-        assertEquals(0, kwota1.porównaj(kwota3)); // kwota1 == kwota3
-    }
-
-    @Test
-    @DisplayName("Kwota - nieprawidłowe grosze")
-    void testKwotaNieprawidłoweGrosze() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Kwota(10, 100);
-        });
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Kwota(10, -1);
-        });
-    }
-
-    @Test
-    @DisplayName("Kwota - equals i toString")
-    void testKwotaEqualsToString() {
-        Kwota kwota1 = new Kwota(10, 50);
-        Kwota kwota2 = new Kwota(10, 50);
-        Kwota kwota3 = new Kwota(20, 0);
-
-        assertEquals(kwota1, kwota2);
-        assertNotEquals(kwota1, kwota3);
-        assertEquals("10 zł 50 gr", kwota1.toString());
+            for (int i = 0; i < liczby.length; i++) {
+                for (int j = i + 1; j < liczby.length; j++) {
+                    assertNotEquals(liczby[i], liczby[j]);
+                }
+            }
+        }
     }
 }

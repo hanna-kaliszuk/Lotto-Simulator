@@ -16,8 +16,7 @@ public class Minimalista extends Gracz {
 
     @Override
     public void kupKupon() {
-        // obstawia 1 zakład na chybiłtrafił na najbliższe losowanie
-        // sprawdzamy czy stać go na zakup kuponu
+        // sprawdzamy, czy stać go na zakup kuponu
         Kwota cena = new Kwota(3, 0);
         if (!maWystarczająceŚrodki(cena)) return;
 

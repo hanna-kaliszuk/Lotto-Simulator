@@ -84,11 +84,11 @@ public class Zakład {
         return ważny;
     }
 
-    private boolean czyAnulowany() {
+    public boolean czyAnulowany() {
         return this.anulowany;
     }
 
-    Zakład kopia() {
+    public Zakład kopia() {
         Zakład kopia = new Zakład();
         kopia.liczby = this.liczby.clone();
         kopia.anulowany = this.czyAnulowany();
