@@ -3,7 +3,6 @@ package gracze;
 import centrala.Centrala;
 import finanse.Kwota;
 import kupony.Kupon;
-import kupony.Zakład;
 
 import java.util.*;
 
@@ -14,7 +13,9 @@ public abstract class Gracz {
     protected Kwota środki;
     protected List<Kupon> posiadaneKupony;
     protected Centrala centrala;
+
     protected static final Random random = new Random();
+    private static final int LICZBY_W_ZAKŁADZIE = 6;
 
     public Gracz(String imię, String nazwisko, int pesel, Kwota środki) {
         this.imię = imię;
@@ -40,14 +41,9 @@ public abstract class Gracz {
             sb.append("Nie posiada żadnych kuponów.");
         } else {
             sb.append("Posiadane kupony:\n");
+
             for (Kupon kupon : posiadaneKupony) {
                 sb.append(" - ").append(kupon.getIdentyfikator());
-
-                // informacja o wykorzystaniu kuponu
-                if (kupon.czyWykorzystany()) {
-                    sb.append(" (zrealizowany)");
-                }
-                sb.append("\n");
             }
         }
 
@@ -72,12 +68,12 @@ public abstract class Gracz {
         this.środki.odejmij(kwota);
     }
 
-    protected int[] generujLosoweLiczby(int liczba) {
-        int[] liczby = new int[liczba];
+    protected int[] generujLosoweLiczby() {
+        int[] liczby = new int[LICZBY_W_ZAKŁADZIE];
         Set<Integer> wylosowane = new HashSet<>();
 
         int i = 0;
-        while (i < liczba) {
+        while (i < LICZBY_W_ZAKŁADZIE) {
             int losowa = random.nextInt(49) + 1; // liczby od 1 do 49
 
             if (wylosowane.add(losowa)) {
@@ -89,8 +85,9 @@ public abstract class Gracz {
         // posortuj liczby dla lepszej czytelności
         Arrays.sort(liczby);
         return liczby;
-
     }
 
-
+    protected void oddajKupon(Kupon kupon) {
+        this.posiadaneKupony.remove(kupon);
+    }
 }
