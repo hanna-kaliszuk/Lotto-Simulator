@@ -1,8 +1,13 @@
 package gracze;
 
 import finanse.Kwota;
+import kolektura.Kolektura;
+import kupony.Kupon;
 import kupony.Zakład;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class Losowy extends Gracz {
@@ -21,6 +26,39 @@ public class Losowy extends Gracz {
     @Override
     public void kupKupon() {
         int liczbaKuponów = random.nextInt(100) + 1;
+
+        for (int i = 0; i < liczbaKuponów; i++) {
+            // wybieramy losową kolekturę
+            Kolektura kolektura = this.wybierzKolekturę();
+
+            // ile zakładów obstawi tym razem
+            int liczbaZakładów = random.nextInt(8) + 1;
+
+            // na ile losowań będzie kupon
+            int liczbaLosowań = random.nextInt(10) + 1;
+
+            // obliczamy cenę kuponu
+            Kwota cena = obliczCenęKuponu(liczbaZakładów, liczbaLosowań);
+
+            // sprawdź, czy go stać
+            if (!możeKupićKupon(cena)) break;
+
+            // jeżeli może, to generujemy zakłady do kuponu i sam kupon
+            List<Zakład> zakłady = new LinkedList<>();
+
+            for (int k = 0; k < liczbaZakładów; k++) {
+                Zakład z = new Zakład(generujLosoweLiczby(6));
+                zakłady.add(z);
+            }
+
+            Kupon kupon = new Kupon(kolektura, zakłady, centrala.getNrNastępnegoLosowania(),
+                    liczbaLosowań);
+
+            // wydaj graczowi kupon
+            kolektura.sprzedajKupon(kupon);
+            dodajKupon(kupon);
+            this.odejmijŚrodki(cena);
+        }
 
 
     }
