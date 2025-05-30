@@ -49,6 +49,12 @@ public class Kwota {
         return Long.compare(this.grosze, inna.grosze);
     }
 
+    // Metoda do sprawdzenia, czy kwota jest > 0
+    public boolean kwotaNieujemna() {
+        Kwota zero = new Kwota(0, 0);
+        return this.porównaj(zero) > 0;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
