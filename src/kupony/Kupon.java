@@ -7,14 +7,16 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Kupon {
-    private static final AtomicInteger globalnyLicznik = new AtomicInteger(0);
+    private static final AtomicInteger globalnyLicznik = new AtomicInteger(0); // aby zapewnić systemową
+    // unikalność numeru porządkowego kuponu
 
     private int nrPorządkowy;
-    private Kolektura Kolektura;
+    private Kolektura Kolektura; // w jakiej kolekturze został sprzedany
     private String identyfikator;
     private Kwota cena;
-    private boolean wykorzystany;
-    private List<Zakład> zakłady;
+    private boolean zrealizowany; // czy nagroda została odebrana przez kupującego
+    private boolean wykorzystany; // czy wziął udział we wszytkich losowaniach
+    private List<Zakład> zakłady; // lista obstawionych zakładów na pods
     private List<Integer> nrLosowań;
 
     public Kupon(Kolektura kolektura, List<Zakład> zakłady, int najbliższeLosowanie, int ileLosowań) {
@@ -24,9 +26,9 @@ public class Kupon {
         this.nrPorządkowy = globalnyLicznik.incrementAndGet();
         this.Kolektura = kolektura;
         this.zakłady = zakłady;
-        this.wykorzystany = false;
+        this.zrealizowany = false;
 
-        this.nrLosowań = new ArrayList<>();
+        this.nrLosowań = new ArrayList<>(ileLosowań);
         for (int i = 0; i < ileLosowań; i++) {
             this.nrLosowań.add(najbliższeLosowanie + i);
         }
@@ -120,7 +122,11 @@ public class Kupon {
     }
 
     public void wykorzystajKupon() {
-        this.wykorzystany = true;
+        this.zrealizowany = true;
+    }
+
+    public boolean czyZrealizowany() {
+        return zrealizowany;
     }
 
     public boolean czyWykorzystany() {

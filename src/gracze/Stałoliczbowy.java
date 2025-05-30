@@ -13,7 +13,6 @@ public class Stałoliczbowy extends Gracz {
     private Zakład zakład;
     private List<Kolektura> ulubioneKolektury;
     private int indeksKolejnejKolektury;
-    private Kupon ostatniKupon;
 
     public Stałoliczbowy(String imię, String nazwisko, int pesel, Kwota środki, int[] ulubione,
                          List<Kolektura> ulubioneKolektury) {
@@ -24,12 +23,12 @@ public class Stałoliczbowy extends Gracz {
         Arrays.sort(ulubione);
         this.zakład = new Zakład(ulubione);
         this.indeksKolejnejKolektury = 0;
-        this.ostatniKupon = null;
     }
 
 
     @Override
     public void kupKupon() {
+        // sprawdzamy, czy przeprowadzono wszystkie losowania obstawione w poprzednim kuponie
         if(!możeKupićNowyKupon()) return;
 
         // wybierz kolejną kolekturę w kolejce
@@ -47,5 +46,18 @@ public class Stałoliczbowy extends Gracz {
         kolektura.sprzedajKupon(kupon);
         dodajKupon(kupon);
         this.odejmijŚrodki(kupon.getCena());
+    }
+
+    private Kolektura wybierzKolekturę() {
+        Kolektura kolektura = ulubioneKolektury.get(indeksKolejnejKolektury);
+        indeksKolejnejKolektury = (indeksKolejnejKolektury + 1) % ulubioneKolektury.size();
+        return kolektura;
+    }
+
+    private boolean możeKupićNowyKupon() {
+        if (posiadaneKupony.isEmpty()) return true;
+
+        Kupon ostatniKupon = posiadaneKupony.getLast();
+        return ostatniKupon.czyWykorzystany();
     }
 }
