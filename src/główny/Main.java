@@ -11,11 +11,11 @@ import java.util.List;
 public class Main {
     private static void testLosowania() {
         for (int i = 1; i < 2137; i++) {
-            Losowanie l = new Losowanie();
+            Losowanie l = new Losowanie(i);
             System.out.println(l);
         }
 
-        Losowanie l = new Losowanie();
+        Losowanie l = new Losowanie(2138);
         System.out.println(l);
     }
 
