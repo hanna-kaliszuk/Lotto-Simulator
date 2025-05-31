@@ -46,13 +46,29 @@ public class Centrala {
         losowanie.zbierzKupony(listaKolektur);
 
         // 4. obliczamy pulę nagród
-        Kwota pula = this.obliczPulę(losowanie, kumulacja);
+        Kwota pulaBazowa = this.obliczPulęBazową(losowanie);
+        Kwota pula = this.obliczPulę(pulaBazowa);
 
-        // 5. dodajemy losowanie do historii
+        // 5. obliczamy wysokości pul dla poszczególnych stopni
+        Kwota pI = this.obliczPulęI(pulaBazowa);
+        Kwota pII = this.obliczPulęII(pulaBazowa);
+        Kwota pIV = this.obliczPulęIV(losowanie);
+        Kwota pIII = this.obliczPulęIII(pula, pI, pII, pIV);
+
+        // 6. zapewniamy próg gwarantowany dla I i III stopnia
+        Kwota gwarantowanaI = new Kwota(2_000_000, 0);
+        if (pI.porównaj(gwarantowanaI) < 0) pI = gwarantowanaI;
+
+        Kwota gwarantowanaIII = new Kwota(36 * losowanie.getTrafienia(3),0);
+        if (pIII.porównaj(gwarantowanaIII) < 0) pIII = gwarantowanaIII;
+
+        //
+
+
         historiaLosowań.add(losowanie);
     }
 
-    private Kwota obliczPulę(Losowanie losowanie, Kwota kumulacja) {
+    private Kwota obliczPulęBazową(Losowanie losowanie) {
         int ileZakładów = losowanie.ileZakładów();
 
         Kwota pula = new Kwota(ileZakładów * 3, 0);
@@ -61,8 +77,6 @@ public class Centrala {
         Kwota zysk = this.obliczZysk(pula);
         pula.odejmij(zysk);
 
-        pula.dodaj(new Kwota(kumulacja));
-
         return pula;
     }
 
@@ -70,5 +84,37 @@ public class Centrala {
         Kwota zysk = new Kwota(pula);
         zysk.pomnóż(0.49);
         return zysk;
+    }
+
+    private Kwota obliczPulę(Kwota p) {
+        Kwota pula = new Kwota(p);
+        pula.dodaj(kumulacja);
+        return pula;
+    }
+
+    private Kwota obliczPulęI(Kwota pb) {
+        Kwota pI = new Kwota(pb);
+        pI.pomnóż(0.44);
+        pI.dodaj(kumulacja);
+        return pI;
+    }
+
+    private Kwota obliczPulęII(Kwota pb) {
+        Kwota pII = new Kwota(pb);
+        pII.pomnóż(0.08);
+        return pII;
+    }
+
+    private Kwota obliczPulęIII(Kwota pula, Kwota pI, Kwota pII, Kwota pIV) {
+        Kwota pIII = new Kwota(pula);
+        pIII.odejmij(pI);
+        pIII.odejmij(pII);
+        pIII.odejmij(pIV);
+        return pIII;
+    }
+
+    private Kwota obliczPulęIV(Losowanie losowanie) {
+        int ileTrafień = losowanie.getTrafienia(4);
+        return new Kwota(24 * ileTrafień, 0);
     }
 }
