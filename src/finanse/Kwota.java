@@ -71,17 +71,4 @@ public class Kwota {
     public int hashCode() {
         return Long.hashCode(grosze);
     }
-
-    @Override
-    public String toString() {
-        long złote = getZłote();
-        int grosze = getGrosze();
-
-        if (saldoUjemne() && złote == 0) {
-            // Przypadek gdy mamy ujemne grosze ale złote to 0 (np. -50 groszy)
-            return String.format("-%d zł %02d gr", Math.abs(złote), grosze);
-        } else {
-            return String.format("%d zł %02d gr", złote, grosze);
-        }
-    }
 }
