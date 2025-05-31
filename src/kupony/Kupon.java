@@ -1,5 +1,7 @@
 package kupony;
 
+import centrala.Centrala;
+import centrala.losowanie.Losowanie;
 import finanse.Kwota;
 import kolektura.Kolektura;
 
@@ -18,6 +20,7 @@ public class Kupon {
     private boolean wykorzystany; // czy wziął udział we wszytkich losowaniach
     private List<Zakład> zakłady; // lista obstawionych zakładów na pods
     private List<Integer> nrLosowań;
+    private Map<Integer, int[]> wygrane;
 
     public Kupon(Kolektura kolektura, List<Zakład> zakłady, int najbliższeLosowanie, int ileLosowań) {
         assert !zakłady.isEmpty() && zakłady.size() <= 8: "Kupon musi zawierać od 1 do 8 zakładów";
@@ -39,6 +42,7 @@ public class Kupon {
         cena.pomnóż(zakłady.size());
         cena.pomnóż(ileLosowań);
         this.cena = cena;
+        this.wygrane = new HashMap<>(); // nrLosowania -> [I, II, III, IV]
     }
 
     public Kupon(Kolektura kolektura, Zakład zakład, int najbliższeLosowanie, int ileLosowań) {
@@ -152,4 +156,56 @@ public class Kupon {
         return kopia;
 
     }
+
+    public Kolektura getKolektura() {
+        return this.Kolektura;
+    }
+
+    public void dodajWygraną(int nrLosowania, int stopień) {
+        if (stopień < 1 || stopień > 4) return;
+
+        // Pobierz istniejącą tablicę lub utwórz nową
+        int[] wygraneWLosowaniu = wygrane.getOrDefault(nrLosowania, new int[4]);
+
+        // Zwiększ licznik odpowiedniego stopnia (indeks = stopień - 1)
+        wygraneWLosowaniu[stopień - 1]++;
+
+        // Aktualizuj mapę
+        wygrane.put(nrLosowania, wygraneWLosowaniu);
+    }
+
+    public Map<Integer, int[]> getWygrane() {
+        // Zwróć głęboką kopię mapy
+        Map<Integer, int[]> kopia = new HashMap<>();
+        for (Map.Entry<Integer, int[]> entry : wygrane.entrySet()) {
+            kopia.put(entry.getKey(), Arrays.copyOf(entry.getValue(), entry.getValue().length));
+        }
+        return kopia;
+    }
+
+    public Kwota obliczWygranąBrutto() {
+        Kwota suma = new Kwota(0, 0);
+        Centrala centrala = Centrala.getInstancja();
+
+        for (Map.Entry<Integer, int[]> entry : wygrane.entrySet()) {
+            int nrLosowania = entry.getKey();
+            int[] wygraneStopnie = entry.getValue();
+            Losowanie losowanie = centrala.getLosowanie(nrLosowania);
+
+            if (losowanie != null) {
+                for (int stopień = 1; stopień <= 4; stopień++) {
+                    int ilość = wygraneStopnie[stopień - 1];
+                    if (ilość > 0) {
+                        Kwota nagroda = losowanie.getNagroda(stopień);
+                        Kwota temp = new Kwota(nagroda);
+                        temp.pomnóż(ilość);
+                        suma.dodaj(temp);
+                    }
+                }
+            }
+        }
+
+        return suma;
+    }
 }
+

@@ -88,7 +88,30 @@ public class Centrala {
         // 7. obliczamy wysokości nagród dla poszczególnych stopni
         this.obliczPuleNagród(losowanie, pulaNagród, trafienia);
 
-        // 8. dodajemy losowanie do historii losowań
+        // 8. aktualizujemy wygrane dla każdego zakładu, który miał >= 3 trafienia
+        for (Kolektura kolektura : listaKolektur) {
+            for (Kupon kupon : kolektura.getSprzedaneKupony()) {
+                if (kupon.zawieraLosowanie(nrLosowania)) {
+                    for (Zakład zakład : kupon.getZakłady()) {
+                        int ileTrafił = zakład.ileTrafień(losowanie.getWylosowaneLiczby());
+
+                        if (ileTrafił >= 3) {
+                            int stopień = 0;
+                            if (ileTrafił == 6) stopień = 1;      // I stopień
+                            else if (ileTrafił == 5) stopień = 2; // II stopień
+                            else if (ileTrafił == 4) stopień = 3; // III stopień
+                            else if (ileTrafił == 3) stopień = 4; // IV stopień
+
+                            kupon.dodajWygraną(nrLosowania, stopień);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // 9. dodajemy losowanie do historii losowań
+        historiaLosowań.add(losowanie);
         // do podania:
         // zwycięska szóstka,
         // pula nagród I stopnia
@@ -207,4 +230,13 @@ public class Centrala {
         this.zysk.dodaj(kwota);
     }
 
+    public Losowanie getLosowanie(int nr) {
+        for (Losowanie losowanie : historiaLosowań) {
+            if (losowanie.getNrLosowania() == nr) {
+                return losowanie;
+            }
+        }
+
+        return null;
+    }
 }

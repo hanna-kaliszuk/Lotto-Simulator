@@ -60,27 +60,6 @@ public class Kolektura {
         this.sprzedaneKupony.add(kupon);
     }
 
-    // obsługa wygranych
-    public void wypłaćWygraną() {
-
-    }
-
-    private boolean sprawdźKupon(Kupon kupon) { // sprawdź, czy kupiony w tej kolekturze
-        return false;
-    }
-
-    private boolean sprawdźCzyNieZrealizowany(Kupon kupon) { // sprawdź, czy nagroda nie została już wypłacona
-        return false;
-    }
-
-    private Kwota obliczWysokośćWygranej() {
-        return null;
-    }
-
-    private Kwota odbliczPodatekOdWygranej() {
-        return null;
-    }
-
     // obsługa finansowa
     private void przekażPieniądze(Kwota kwota, int zakłady, int losowania) {
         // podatek przekazujemy do budżetu państwa a zysk do centrali
@@ -94,7 +73,7 @@ public class Kolektura {
         // nagród
     }
 
-    private Kwota pobierzŚrodkiNaWygraną(Kwota kwota) {
+    private Kwota pobierzŚrodkiNaWygraną() {
         return null;
     }
 
@@ -124,5 +103,24 @@ public class Kolektura {
 
     public Kupon[] getSprzedaneKupony() {
         return null;
+    }
+
+    private boolean poprawnyKupon(Kupon kupon) {
+        // sprawdzamy, czy kupon nie został wcześniej zrealizowany
+        if (kupon.czyZrealizowany()) return false ;
+
+        // jeżeli nie, to sprawdzamy, czy został tutaj zakupiony
+        return this.kupionyTutaj(kupon);
+    }
+
+    private boolean kupionyTutaj(Kupon kupon) {
+        return sprzedaneKupony.contains(kupon);
+    }
+
+    public void wydajNagrodę(Kupon kupon) {
+        if (!poprawnyKupon(kupon)) return;
+
+        // jeżeli kupon jest poprawny, to sprawdzamy, w ilu losowaniach wygrał jakąkolwiek nagrodę
+
     }
 }

@@ -47,4 +47,13 @@ public class Losowanie {
         }
         return sb.toString();
     }
+
+    public Kwota getNagroda(int stopień) {
+        Kwota nagroda = nagrody.get(stopień);
+        if (nagroda == null) {
+            return new Kwota(0, 0);
+        }
+
+        return new Kwota(nagroda);
+    }
 }

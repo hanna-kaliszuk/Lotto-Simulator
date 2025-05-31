@@ -2,6 +2,7 @@ package gracze;
 
 import centrala.Centrala;
 import finanse.Kwota;
+import kolektura.Kolektura;
 import kupony.Kupon;
 
 import java.util.*;
@@ -65,5 +66,13 @@ public abstract class Gracz {
 
     protected void oddajKupon(Kupon kupon) {
         this.posiadaneKupony.remove(kupon);
+    }
+
+    public void odbierzWygraną(Kupon kupon) {
+        // z danym kuponem udaje się do kolektury, z której jest kupon
+        Kolektura kolektura = kupon.getKolektura();
+
+        // kolektura weryfikuje go i wydaje ewentualną nagrodę
+        kolektura.wydajNagrodę(kupon);
     }
 }
