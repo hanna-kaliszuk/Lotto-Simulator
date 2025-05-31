@@ -121,6 +121,6 @@ public class Kolektura {
         if (!poprawnyKupon(kupon)) return;
 
         // jeżeli kupon jest poprawny, to sprawdzamy, w ilu losowaniach wygrał jakąkolwiek nagrodę
-
+        kupon.get
     }
 }
