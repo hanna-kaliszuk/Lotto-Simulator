@@ -86,7 +86,7 @@ public class Centrala {
         }
 
         // 7. obliczamy wysokości nagród dla poszczególnych stopni
-        this.obliczNagrody(losowanie, pulaNagród, trafienia);
+        this.obliczPuleNagród(losowanie, pulaNagród, trafienia);
 
         // 8. dodajemy losowanie do historii losowań
         // do podania:
@@ -108,7 +108,7 @@ public class Centrala {
         return listaKolektur.get(indeks);
     }
 
-    private void obliczNagrody(Losowanie losowanie, Kwota pula, Map<Integer, Integer> trafienia) {
+    private void obliczPuleNagród(Losowanie losowanie, Kwota pula, Map<Integer, Integer> trafienia) {
         // 44% puli to nagrody I stopnia (min 2 000 000 zł)
         // 8% puli to nagrody II stopnia
         //   24zł to nagrody IV stopnia
@@ -117,7 +117,7 @@ public class Centrala {
         int wygraneI = trafienia.getOrDefault(6, 0);
         int wygraneII = trafienia.getOrDefault(5, 0);
         int wygraneIII = trafienia.getOrDefault(4, 0);
-        int wygraneIV = trafienia.getOrDefault(3, 0)
+        int wygraneIV = trafienia.getOrDefault(3, 0);
 
         // obliczamy podstawowe pule nagród (44%, 8%)
         Kwota pulaI = new Kwota(pula);
@@ -129,17 +129,78 @@ public class Centrala {
         // obliczamy pulę IV stopnia
         Kwota pulaIV = new Kwota(wygraneIV * 24, 0); // 24 zł za każde trafienie IV stopnia
 
-        // obliczamy pulę nagród III stopnia ( = pula - pozostałe stopnie)
-        Kwota pulaIII = new Kwota(pula);
-        pulaIII.odejmij(pulaI);
-        pulaIII.odejmij(pulaII);
-        pulaIII.odejmij(pulaIV);
+        // sprawdzamy, ile potrzebujemy do III puli przynajmniej
+        Kwota minPulaIII = new Kwota(wygraneIII * 36, 0);
+        Kwota pozostała = obliczPozostałąPulę(pula, pulaI, pulaII, pulaIV);
 
-        // sprawdzamy, czy pula I osiągnęła kwotę gwarantowaną
-        pulaI = obsłużPulęI(pulaI, wygraneI);
+        // oblicz stosunek minPulaIII do pozostałej, dostępnej kwoty
+        Kwota pulaIII = zagospodarujPulęIII(minPulaIII, pozostała);
 
-        // sprawdzamy, czy pula III gwarantuje każdemu min. 36 zł wygranej
-        pulaIII = obsłużPulęIII(pulaIII, wygraneIII);
+        Kwota doPobraniaOdPaństwa = this.obliczDeficyt(pula, pulaI, pulaII, pulaIII, pulaIV);
+
+        if (doPobraniaOdPaństwa.kwotaNieujemna()) {
+            budżetPaństwa.wydajSubwencję(doPobraniaOdPaństwa);
+        }
+
+
+    }
+
+    private Kwota obliczPozostałąPulę(Kwota pula, Kwota pulaI, Kwota pulaII, Kwota pulaIV) {
+        Kwota pozostała = new Kwota(pula);
+        pozostała.odejmij(pulaI);
+        pozostała.odejmij(pulaII);
+        pozostała.odejmij(pulaIV);
+        return pozostała;
+    }
+
+    private Kwota zagospodarujPulęIII(Kwota min, Kwota jest) {
+        if (min.kwotaNieujemna()) { // jak potrzebuje więcej niż 0
+            if (min.porównaj(jest) <= 0) { // jak potrzebuję <= kwotę niż mam dostępną, to korzystam z tego, co jest dostępne
+                return new Kwota(jest);
+            } else { // a jak potrzebuję więcej, to dostają po 36 zł
+                return new Kwota(min);
+            }
+        } else {
+            return new Kwota(0, 0);
+        }
+    }
+
+    private Kwota obliczDeficyt(Kwota pula, Kwota stopieńI, Kwota stopieńII, Kwota stopieńIII, Kwota stopieńIV) {
+        // sprawdzamy, czy pulaI >= 2_000_000
+        Kwota gwarantowana = new Kwota(2_000_000, 0);
+        Kwota potrzebna = new Kwota(0, 0);
+
+        // sumujemy, ile pieniędzy potrzebujemy na opłacenie nagród każdego stopnia
+        if (stopieńI.porównaj(gwarantowana) < 0) { // jeżeli w I puli jest mniej niż gwarantowane 2 mln, to musimy je zapewnić
+            potrzebna.dodaj(gwarantowana);
+        } else {
+            potrzebna.dodaj(stopieńI);
+        }
+
+        potrzebna.dodaj(stopieńII);
+        potrzebna.dodaj(stopieńIII);
+        potrzebna.dodaj(stopieńIV);
+
+        // sprawdzamy, czy tyle jest w puli
+        if (pula.porównaj(potrzebna) >= 0) { // w puli jest wystarczająca kwota, więc nie ma deficytu
+            return new Kwota(0, 0);
+        }
+        // obliczamy ile brakuje
+        Kwota różnica = new Kwota(potrzebna);
+        różnica.odejmij(pula);
+
+        // sprawdzamy, czy środki centrali to pokryją
+        if (this.środkiFinansowe.porównaj(różnica) >= 0) { // tak
+            this.środkiFinansowe.odejmij(różnica);
+            return new Kwota(0, 0);
+        }
+
+        if (this.środkiFinansowe.kwotaNieujemna()) { // jeżeli centrala ma jakiekolwiek środki, to z nich korzystamy
+            różnica.dodaj(this.środkiFinansowe);
+            środkiFinansowe = new Kwota(0, 0);
+        }
+
+        return różnica; // zwracamy tyle, ile brakuje
     }
 
     private void dodajZysk(Kwota kwota) {
