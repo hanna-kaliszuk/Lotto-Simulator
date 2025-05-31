@@ -176,6 +176,20 @@ public class Centrala {
         }
     }
 
+    private Kwota obliczDrugiStopień(Kwota pula, int ileTrafiło) {
+        // 8% puli
+        Kwota nagroda = new Kwota(pula);
+        nagroda.pomnóż(0.08);
+
+        if (ileTrafiło == 0) {
+            Kwota doZysku = new Kwota(nagroda);
+            this.dodajZysk(doZysku);
+            return new Kwota(0, 0);
+        } else {
+            return nagroda;
+        }
+    }
+
     private void dodajZysk(Kwota kwota) {
         this.zysk.dodaj(kwota);
     }
