@@ -111,90 +111,39 @@ public class Centrala {
     private void obliczNagrody(Losowanie losowanie, Kwota pula, Map<Integer, Integer> trafienia) {
         // 44% puli to nagrody I stopnia (min 2 000 000 zł)
         // 8% puli to nagrody II stopnia
-        //   24zł to nagrody III stopnia
-        // reszta to nagrody IV stopnia
+        //   24zł to nagrody IV stopnia
+        // reszta to nagrody III stopnia
 
         int wygraneI = trafienia.getOrDefault(6, 0);
         int wygraneII = trafienia.getOrDefault(5, 0);
         int wygraneIII = trafienia.getOrDefault(4, 0);
         int wygraneIV = trafienia.getOrDefault(3, 0)
 
-        // stopień I
-        Kwota stopieńI = obliczPierwszyStopień(pula, wygraneI);
+        // obliczamy podstawowe pule nagród (44%, 8%)
+        Kwota pulaI = new Kwota(pula);
+        pulaI.pomnóż(0.44); // 44% na I stopień
 
-        // stopień II
-        Kwota stopieńII = obliczDrugiStopień(pula, wygraneII);
+        Kwota pulaII = new Kwota(pula);
+        pulaII.pomnóż(0.08); // 8% na II stopień
 
-        // stopień III
-        Kwota stopieńIII = obliczTrzeciStopień(wygraneIII);
+        // obliczamy pulę IV stopnia
+        Kwota pulaIV = new Kwota(wygraneIV * 24, 0); // 24 zł za każde trafienie IV stopnia
 
-        // stopień IV
-        Kwota stopieńIV = obliczCzwartyStopień(pula, stopieńI, stopieńII, stopieńIII);
-    }
+        // obliczamy pulę nagród III stopnia ( = pula - pozostałe stopnie)
+        Kwota pulaIII = new Kwota(pula);
+        pulaIII.odejmij(pulaI);
+        pulaIII.odejmij(pulaII);
+        pulaIII.odejmij(pulaIV);
 
-    private Kwota obliczPierwszyStopień(Kwota pula, int ileTrafiło) {
-        // 44% puli + ewentualne subwencje + ewentualne kumulacje
-        Kwota gwarantowana = new Kwota(2000000, 0);
-        Kwota nagroda = new Kwota(pula);
-        nagroda.pomnóż(0.44);
+        // sprawdzamy, czy pula I osiągnęła kwotę gwarantowaną
+        pulaI = obsłużPulęI(pulaI, wygraneI);
 
-        if (ileTrafiło == 0) {
-            Kwota doKumulacji = new Kwota(nagroda);
-            this.dodajKumulację(doKumulacji);
-            return new Kwota(0, 0);
-        } else {
-            if (this.kumulacjaStopniaI.kwotaNieujemna()) {
-                nagroda.dodaj(this.kumulacjaStopniaI);
-                kumulacjaStopniaI = new Kwota(0, 0);
-            }
-
-            if (nagroda.porównaj(gwarantowana) < 0 ) { // jeżeli nagroda jest poniżej kwoty gwarantowanej
-                Kwota różnica = new Kwota(gwarantowana);
-                różnica.odejmij(nagroda); // tyle brakuje do 2 mln
-
-                if (this.środkiFinansowe.porównaj(różnica) >= 0) { // jeżeli centrala ma własne środki, na pokrycie różnicy
-                    this.środkiFinansowe.odejmij(różnica);
-                    nagroda = new Kwota(gwarantowana);
-                } else {
-                    // koniecznie jest pobranie subwencji
-                    Kwota doSubwencji = new Kwota(różnica);
-
-                    // jeżeli centrala ma jakieś środki, to je wykorzystujemy w pierwszej kolejności
-                    if (this.środkiFinansowe.kwotaNieujemna()) {
-                        doSubwencji.odejmij(this.środkiFinansowe);
-                        nagroda.dodaj(this.środkiFinansowe);
-                        this.środkiFinansowe = new Kwota(0, 0);
-                    }
-
-                    // resztę pobieramy od państwa
-                    budżetPaństwa.wydajSubwencję(doSubwencji);
-                    nagroda = new Kwota(gwarantowana);
-                }
-            }
-
-            return nagroda;
-        }
-    }
-
-    private Kwota obliczDrugiStopień(Kwota pula, int ileTrafiło) {
-        // 8% puli
-        Kwota nagroda = new Kwota(pula);
-        nagroda.pomnóż(0.08);
-
-        if (ileTrafiło == 0) {
-            Kwota doZysku = new Kwota(nagroda);
-            this.dodajZysk(doZysku);
-            return new Kwota(0, 0);
-        } else {
-            return nagroda;
-        }
+        // sprawdzamy, czy pula III gwarantuje każdemu min. 36 zł wygranej
+        pulaIII = obsłużPulęIII(pulaIII, wygraneIII);
     }
 
     private void dodajZysk(Kwota kwota) {
         this.zysk.dodaj(kwota);
     }
 
-    private void dodajKumulację(Kwota k) {
-        this.kumulacjaStopniaI.dodaj(k);
-    }
 }
