@@ -71,4 +71,21 @@ public class Kwota {
     public int hashCode() {
         return Long.hashCode(grosze);
     }
+
+    public void podziel(int dzielnik) {
+        if (dzielnik == 0) {
+            throw new IllegalArgumentException("Nie można dzielić przez zero");
+        }
+
+        this.grosze = this.grosze / dzielnik;
+    }
+
+    public void podziel(double dzielnik) {
+        if (dzielnik == 0.0) {
+            throw new IllegalArgumentException("Nie można dzielić przez zero");
+        }
+
+        this.grosze = Math.round(this.grosze / dzielnik);
+    }
+
 }
