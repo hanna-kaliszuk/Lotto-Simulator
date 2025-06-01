@@ -1,9 +1,12 @@
 package centrala;
 
+import centrala.losowanie.*;
 import finanse.BudżetPaństwa;
 import finanse.Kwota;
+import kolektura.Kolektura;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class Centrala {
     private static Centrala instancja;
@@ -32,6 +35,14 @@ public class Centrala {
         if (instancja == null) {
             instancja = new Centrala(k);
         }
+    }
+
+    public static Centrala getInstancja() {
+        if (instancja == null) {
+            throw new IllegalStateException("Nie zainicjalizowano centrala");
+        }
+
+        return instancja;
     }
 
     public void przeprowadźLosowanie() {
@@ -64,44 +75,44 @@ public class Centrala {
 
         Kwota[] pule = {pI, pII, pIII, pIV};
 
-        // 7. obliczamy wygrane każdego stopnia
+        // 7. obliczamy ile było zwycięskich zakładów na każdym poziomie
+        int zI = losowanie.getTrafienia(1);
+        int zII = losowanie.getTrafienia(2);
+        int zIII = losowanie.getTrafienia(3);
+        int zIV = losowanie.getTrafienia(4);
+
+        int[] wygraneZakłady = {zI, zII, zIII, zIV};
+
+        // 8. obliczamy wygrane każdego stopnia
         Kwota wI = new Kwota(pI);
-        if (losowanie.getTrafienia(1) == 0) {
+        if (zI == 0) {
             wI = new Kwota(0, 0);
         } else {
-            wI.podziel(losowanie.getTrafienia(1));
+            wI.podziel(zI);
         }
 
         Kwota wII = new Kwota(pII);
-        if (losowanie.getTrafienia(2) == 0) {
+        if (zII == 0) {
             wII = new Kwota(0, 0);
         } else {
-            wII.podziel(losowanie.getTrafienia(2));
+            wII.podziel(zII);
         }
 
         Kwota wIII = new Kwota(pIII);
-        if (losowanie.getTrafienia(3) == 0) {
+        if ( zIII == 0) {
             wIII = new Kwota(0, 0);
         } else {
-            wIII.podziel(losowanie.getTrafienia(3));
+            wIII.podziel( zIII);
         }
 
         Kwota wIV = new Kwota(pIV);
-        if (losowanie.getTrafienia(4) == 0) {
+        if (zIV == 0) {
             wIV = new Kwota(0, 0);
         } else {
-            wIV.podziel(losowanie.getTrafienia(4));
+            wIV.podziel(zIV);
         }
 
         Kwota[] wygrane = {wI, wII, wIII, wIV};
-
-        // 8. obliczamy ile było zwycięskich zakładów na każdym poziomie
-        int zI = losowanie.getZwycięskieZakłady(1);
-        int zII = losowanie.getZwycięskieZakłady(2);
-        int zIII = losowanie.getZwycięskieZakłady(3);
-        int zIV = losowanie.getZwycięskieZakłady(4);
-
-        int[] wygraneZakłady = {zI, zII, zIII, zIV};
 
         // 9. dodajemy wynik losowania do historii
         Wynik wynik = new Wynik(kwoty, wygraneZakłady, pule);
@@ -158,7 +169,7 @@ public class Centrala {
         return new Kwota(24 * ileTrafień, 0);
     }
 
-    public String wypiszLosowania() {
+    public void wypiszLosowania() {
         for (Wynik w : historiaLosowań) {
             w.podajWynik();
         }

@@ -1,0 +1,75 @@
+package centrala.losowanie;
+
+import centrala.Centrala;
+import kolektura.Kolektura;
+import kupony.Kupon;
+import kupony.Zakład;
+
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+
+public class Losowanie {
+    private static Centrala centrala = Centrala.getInstancja();
+    private int nrLosowania;
+    private int[] wylosowaneLiczby;
+    private List<Kupon> kuponyBiorąceUdział;
+    private List<Zakład> zakładyBiorąceUdział;
+
+    public Losowanie (int nr) {
+        this.nrLosowania = nr;
+        this.wylosowaneLiczby = this.wylosujLiczby();
+        Arrays.sort(wylosowaneLiczby);
+        this.kuponyBiorąceUdział = new LinkedList<>();
+        this.zakładyBiorąceUdział = new LinkedList<>();
+    }
+
+    private int[] wylosujLiczby() {
+        Set<Integer> wynik = new HashSet<>();
+        while (wynik.size() < 6) {
+            int liczba = ThreadLocalRandom.current().nextInt(1, 50);
+            wynik.add(liczba);
+        }
+        return wynik.stream()
+                .mapToInt(Integer::intValue)
+                .toArray();
+    }
+
+    public void zbierzKupony(List<Kolektura> listaKolektur) {
+        kuponyBiorąceUdział = listaKolektur.stream()
+                .flatMap(k -> k.getSprzedaneKupony().stream())
+                .filter(kupon -> kupon.getNrLosowania() == this.nrLosowania)
+                .collect(Collectors.toList());
+    }
+
+    public int ileZakładów() {
+        zakładyBiorąceUdział = kuponyBiorąceUdział.stream()
+                .flatMap(kupon -> kupon.getZakłady().stream())
+                .collect(Collectors.toList());
+
+        return zakładyBiorąceUdział.size();
+    }
+
+    public int getTrafienia(int stopień) {
+        int licznik = 0;
+        int wymaganeTrafienia = 0;
+
+        switch (stopień) {
+            case 1: wymaganeTrafienia = 6; break; // I stopień - 6 trafionych
+            case 2: wymaganeTrafienia = 5; break; // II stopień - 5 trafionych
+            case 3: wymaganeTrafienia = 4; break; // III stopień - 4 trafione
+            case 4: wymaganeTrafienia = 3; break; // IV stopień - 3 trafione
+            default: return 0;
+        }
+
+        for (Zakład z : zakładyBiorąceUdział) {
+            if (z.sprawdźTrafienia(this.wylosowaneLiczby) == wymaganeTrafienia) {
+                licznik++;
+            }
+        }
+
+        return licznik;
+    }
+
+
+}
