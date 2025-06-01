@@ -18,6 +18,7 @@ public class Centrala {
 
     private List<Wynik> historiaLosowań;
     private List<Kolektura> listaKolektur;
+    private static int nrOstatniejZarejestrowanejKolektury = 0;
 
     private int nrOstatniegoLosowania;
 
@@ -180,5 +181,10 @@ public class Centrala {
         sb.append("Centrala posiada obecnie: ");
         sb.append(środki);
         return sb.toString();
+    }
+
+    public void zarejestrujKolekturę(Kolektura k) {
+        nrOstatniejZarejestrowanejKolektury++;
+        listaKolektur.add(k);
     }
 }
