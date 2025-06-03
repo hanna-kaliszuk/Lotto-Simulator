@@ -195,4 +195,16 @@ public class Centrala {
             budżetPaństwa.wydajSubwencję(różnica);
         }
     }
+
+    public int getNrNastępnegoLosowania() {
+        return nrOstatniegoLosowania + 1;
+    }
+
+    public void dodajŚrodki(Kwota doCentali) {
+        if (doCentali.kwotaNieujemna()) {
+            this.środki.dodaj(doCentali);
+        } else {
+            throw new IllegalArgumentException("Kwota do dodania musi być nieujemna.");
+        }
+    }
 }
