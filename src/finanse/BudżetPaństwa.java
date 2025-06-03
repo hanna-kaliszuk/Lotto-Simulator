@@ -27,6 +27,26 @@ public class BudżetPaństwa {
     }
 
     public String raport() {
-        return "Podatki: " + pobranePodatki + "\nSubwencje: " + wydaneSubwencje;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Pobrane podatki: ").append(pobranePodatki).append("\n");
+        sb.append("Wydane subwencje: ").append(wydaneSubwencje).append("\n");
+        return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "BudżetPaństwa{" +
+                "pobranePodatki=" + pobranePodatki +
+                ", wydaneSubwencje=" + wydaneSubwencje +
+                '}';
+    }
+
+    public void resetujBudżet() {
+        this.pobranePodatki = new Kwota(0, 0);
+        this.wydaneSubwencje = new Kwota(0, 0);
+    }
+
+    public static void resetInstancji() {
+        instancja = null;
     }
 }
