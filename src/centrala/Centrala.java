@@ -14,7 +14,6 @@ public class Centrala {
     private final static BudżetPaństwa budżetPaństwa = BudżetPaństwa.getInstancja();
     private Kwota środki;
     private Kwota kumulacja;
-    private Kwota zysk;
 
     private List<Wynik> historiaLosowań;
     private List<Kolektura> listaKolektur;
@@ -25,11 +24,9 @@ public class Centrala {
     private Centrala(Kwota kwota) {
         this.środki = kwota;
         this.kumulacja = new Kwota(0, 0);
-        this.zysk = new Kwota(0, 0);
-        this.historiaLosowań = new LinkedList<Wynik>();
-        this.listaKolektur = new LinkedList<Kolektura>();
+        this.historiaLosowań = new LinkedList<>();
+        this.listaKolektur = new LinkedList<>();
         this.nrOstatniegoLosowania = 0;
-
     }
 
     public static void inicjalizujCentralę(Kwota k) {
@@ -82,7 +79,7 @@ public class Centrala {
         int zIII = losowanie.getTrafienia(3);
         int zIV = losowanie.getTrafienia(4);
 
-        int[] wygraneZakłady = {zI, zII, zIII, zIV};
+        int[] trafioneZakłady = {zI, zII, zIII, zIV};
 
         // 8. obliczamy wygrane każdego stopnia
         Kwota wI = new Kwota(pI);
@@ -116,7 +113,7 @@ public class Centrala {
         Kwota[] wygrane = {wI, wII, wIII, wIV};
 
         // 9. dodajemy wynik losowania do historii
-        Wynik wynik = new Wynik(kwoty, wygraneZakłady, pule);
+        Wynik wynik = new Wynik(losowanie, wygrane, pule, trafioneZakłady);
         historiaLosowań.add(wynik);
     }
 
@@ -186,5 +183,16 @@ public class Centrala {
     public void zarejestrujKolekturę(Kolektura k) {
         nrOstatniejZarejestrowanejKolektury++;
         listaKolektur.add(k);
+    }
+
+    public void wydajNagrodę(Kwota nagroda) {
+        if (środki.porównaj(nagroda) >= 0) {
+            środki.odejmij(nagroda);
+        } else {
+            Kwota różnica = new Kwota(nagroda);
+            różnica.odejmij(środki);
+            środki = new Kwota(0, 0);
+            budżetPaństwa.wydajSubwencję(różnica);
+        }
     }
 }

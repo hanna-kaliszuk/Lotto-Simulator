@@ -3,6 +3,7 @@ package kolektura;
 import centrala.Centrala;
 import kupony.Kupon;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Kolektura {
@@ -15,4 +16,7 @@ public class Kolektura {
         centrala.zarejestrujKolekturę(this);
     }
 
+    public List<Kupon> getSprzedaneKupony() {
+        return sprzedaneKupony;
+    }
 }
