@@ -45,4 +45,7 @@ public class Wynik {
         return sb.toString();
     }
 
+    public void podajWynik() {
+        System.out.println(this);
+    }
 }
