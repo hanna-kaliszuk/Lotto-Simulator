@@ -71,6 +71,15 @@ public class Kolektura {
         gracz.odbierzKupon(kupon);
     }
 
+    private void przekażŚrodki(Kwota kwota) {
+        Kwota podatek = new Kwota(kwota);
+        podatek.pomnóż(0.20); // 20% podatek
+        budżetPaństwa.dodajPodatek(podatek);
+
+        Kwota doCentali = new Kwota(kwota);
+        doCentali.pomnóż(0.80); // 80% do centrali
+        centrala.dodajŚrodki(doCentali);
+    }
 
 
     public List<Kupon> getSprzedaneKupony() {
