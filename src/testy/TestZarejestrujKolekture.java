@@ -33,7 +33,7 @@ public class TestZarejestrujKolekture {
         int initialSize = lista.size();
 
         // When
-        Kolektura kolektura = new Kolektura(1);
+        Kolektura kolektura = new Kolektura();
 
         // Then
         int finalCounter = (int) counterField.get(null);
