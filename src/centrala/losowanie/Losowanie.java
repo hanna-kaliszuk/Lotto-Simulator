@@ -79,5 +79,16 @@ public class Losowanie {
         return Arrays.copyOf(wylosowaneLiczby, wylosowaneLiczby.length);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Losowanie nr ").append(nrLosowania).append("\n");
+        sb.append("Wyniki: ");
+        for (int liczba : wylosowaneLiczby) {
+            sb.append(String.format("%2d", liczba)).append(" ");
+        }
+        return sb.toString();
+    }
+
 
 }
