@@ -34,5 +34,17 @@ public class Blankiet {
         return sb.toString();
     }
 
+    public int ileWażnychZakładów() {
+        int licznik = 0;
+        for (Zakład z : zakłady) {
+            if (z.jestWażny() && !z.czyAnulowany()) {
+                licznik++;
+            }
+        }
+        return licznik;
+    }
 
+    public int getIleLosowań() {
+        return ileLosowań;
+    }
 }

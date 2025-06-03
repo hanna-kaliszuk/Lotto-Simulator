@@ -27,7 +27,7 @@ public class Kolektura {
     public void sprzedajKuponZBlankietu(Blankiet blankiet, Gracz gracz) {
         int najbliższeLosowanie = centrala.getNrNastępnegoLosowania();
 
-        Kwota cena = blankiet.getCena();
+        Kwota cena = obliczCenęKuponu(blankiet);
 
         if (gracz.jestWypłacalny(cena)) {
             gracz.zapłać(cena);
@@ -40,6 +40,15 @@ public class Kolektura {
 
         this.przekażŚrodki(cena);
         gracz.odbierzKupon(kupon);
+    }
+
+    private Kwota obliczCenęKuponu(Blankiet blankiet) {
+        int zakłady = blankiet.ileWażnychZakładów();
+        int losowania = blankiet.getIleLosowań();
+        Kwota cena = new Kwota(3, 0);
+        cena.pomnóż(zakłady);
+        cena.pomnóż(losowania);
+        return cena;
     }
 
     public void sprzedajKuponChybiłTrafił(int liczbaZakładów, int liczbaLosowań, Gracz gracz) {
