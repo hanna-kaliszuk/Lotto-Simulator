@@ -110,4 +110,8 @@ public class Kolektura {
     public List<Kupon> getSprzedaneKupony() {
         return sprzedaneKupony;
     }
+
+    public int getNrKolektury() {
+        return nrKolektury;
+    }
 }
