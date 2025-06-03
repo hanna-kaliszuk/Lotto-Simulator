@@ -1,6 +1,7 @@
 package gracze;
 
 import finanse.Kwota;
+import kolektura.Kolektura;
 import kupony.Kupon;
 
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ public abstract class Gracz {
     private int pesel;
     private Kwota środki;
     private List<Kupon> zakupioneKupony;
+    protected List<Kolektura> ulubioneKolektury;
 
     public Gracz(String imię, String nazwisko, int pesel, Kwota środki) {
         this.imię = imię;
@@ -58,4 +60,6 @@ public abstract class Gracz {
     public void odbierzKupon(Kupon kupon) {
         zakupioneKupony.add(kupon);
     }
+
+    public abstract void kupKupon();
 }
