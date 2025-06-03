@@ -3,6 +3,7 @@ package kupony;
 import finanse.Kwota;
 import kolektura.Kolektura;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,13 +16,20 @@ public class Kupon {
     private int naIleLosowań;
     private Kwota cena;
     private boolean zrealizowany; // gracz odebrał wygrane za ten kupon
+    private List<Integer> nrLosowań;
 
-    public Kupon(Kolektura wystawiająca, List<Zakład> obstawione, int losowania) {
+
+    public Kupon(Kolektura wystawiająca, List<Zakład> obstawione, int losowania, int najbliższeLosowanie) {
         this.kolekturaWystawiająca = wystawiająca;
         this.zakłady = obstawione;
         this.naIleLosowań = losowania;
         this.nrKuponu = nrKuponu++;
+        this.zrealizowany = false;
 
+        this.nrLosowań = new ArrayList<>(losowania);
+        for (int i = 0; i < losowania; i++) {
+            this.nrLosowań.add(najbliższeLosowanie + i);
+        }
 
         this.cena = obliczCenę(zakłady, naIleLosowań);
         this.identyfikator = stwórzIdentyfikator(nrKuponu, kolekturaWystawiająca.getNrKolektury());
@@ -79,6 +87,55 @@ public class Kupon {
 
         return suma;
     }
+
+    public String getSprawozdzanieKuponu() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Identyfikator kuponu: ").append(identyfikator).append("\n");
+        sb.append("Cena kuponu: ").append(cena).append("\n");
+        sb.append("W tym podatek: ").append(cena.getPodatek()).append("\n");
+        return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        // 1. identyfikator kuponu
+        sb.append("KUPON NR ");
+        sb.append(this.getIdentyfikator() + "\n");
+
+        // 2. ponumerowana lista kolejnych zakładów z wyrównanymi wylosowanymi liczbami do prawej
+        for (int i = 0; i < zakłady.size(); i++) {
+            sb.append(String.format("%d: ", i + 1));
+            sb.append(zakłady.get(i).toString()).append('\n');
+        }
+
+        // 3. liczba losowań
+        sb.append("LICZBA LOSOWAŃ: ").append(nrLosowań.size()).append('\n');
+
+        // 4. lista numerów losowań
+        sb.append("NUMERY LOSOWAŃ:\n ");
+        for (Integer integer : nrLosowań) {
+            sb.append(integer).append(' ');
+        }
+        sb.append('\n');
+
+        // cena brutto kuponu
+        Kwota cena = this.cena;
+        sb.append("CENA: ").append(cena).append('\n');
+
+        return sb.toString();
+    }
+
+    public void wydrukKuponu() {
+        System.out.println(this);
+    }
+
+    private String getIdentyfikator() {
+        return identyfikator;
+    }
+
+
 
 
 }
