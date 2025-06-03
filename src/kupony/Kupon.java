@@ -131,7 +131,7 @@ public class Kupon {
         System.out.println(this);
     }
 
-    private String getIdentyfikator() {
+    public String getIdentyfikator() {
         return identyfikator;
     }
 
