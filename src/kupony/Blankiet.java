@@ -6,6 +6,11 @@ public class Blankiet {
     private int ileLosowań;
     private List<Zakład> zakłady;
 
+    public Blankiet(List<Zakład> zakłady, int losowania) {
+        this.zakłady = zakłady;
+        int ileLosowań = losowania;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
