@@ -21,4 +21,8 @@ public class Zakład {
     public boolean czyAnulowany() {
         return anulowany;
     }
+
+    public int[] getLiczby() {
+        return Arrays.copyOf(liczby, liczby.length);
+    }
 }
