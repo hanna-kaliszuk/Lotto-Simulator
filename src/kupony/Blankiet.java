@@ -1,5 +1,6 @@
 package kupony;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Blankiet {
@@ -46,5 +47,13 @@ public class Blankiet {
 
     public int getIleLosowań() {
         return ileLosowań;
+    }
+
+    public List<Zakład> getZakłady() {
+        List<Zakład> kopia = new ArrayList<>(zakłady.size());
+        for (Zakład z : zakłady) {
+            kopia.add(new Zakład(z.getLiczby()));
+        }
+        return kopia;
     }
 }

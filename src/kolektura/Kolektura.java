@@ -35,7 +35,7 @@ public class Kolektura {
             throw new IllegalArgumentException("Gracz nie ma wystarczających środków na zakup kuponu.");
         }
 
-        Kupon kupon = new Kupon();
+        Kupon kupon = new Kupon(this, blankiet.getZakłady(), blankiet.getIleLosowań());
         sprzedaneKupony.add(kupon);
 
         this.przekażŚrodki(cena);
@@ -70,7 +70,7 @@ public class Kolektura {
 
         int najbliższeLosowanie = centrala.getNrNastępnegoLosowania();
 
-        Kupon kupon = new Kupon();
+        Kupon kupon = new Kupon(this, zakłady, liczbaLosowań);
         sprzedaneKupony.add(kupon);
 
         this.przekażŚrodki(cena);
