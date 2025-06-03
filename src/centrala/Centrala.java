@@ -29,6 +29,17 @@ public class Centrala {
         this.nrOstatniegoLosowania = 0;
     }
 
+    public static void resetLiczników() {
+        nrOstatniejZarejestrowanejKolektury = 0;
+        Kolektura.resetujNumerację();
+    }
+
+    public static void resetInstancji() {
+        instancja = null;
+        resetLiczników();
+    }
+
+
     public static void inicjalizujCentralę(Kwota k) {
         if (instancja == null) {
             instancja = new Centrala(k);
@@ -37,7 +48,7 @@ public class Centrala {
 
     public static Centrala getInstancja() {
         if (instancja == null) {
-            throw new IllegalStateException("Nie zainicjalizowano centrala");
+            throw new IllegalStateException("Nie zainicjalizowano centrali");
         }
 
         return instancja;

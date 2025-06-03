@@ -1,11 +1,18 @@
 package główny;
 
 import centrala.Centrala;
+import finanse.BudżetPaństwa;
 import finanse.Kwota;
 
 public class Main {
     public static void main(String[] args) {
-        Centrala.inicjalizujCentralę(new Kwota(1_000_000, 0));
-        Centrala Centrala = centrala.Centrala.getInstancja();
+//        BudżetPaństwa budżet = BudżetPaństwa.getInstancja();
+//        budżet.dodajPodatek(new Kwota(100, 50));
+//        budżet.wydajSubwencję(new Kwota(500, 0));
+//        budżet.wydajSubwencję(new Kwota(200, 25));
+//        budżet.wydajSubwencję(new Kwota(300, 75));
+//        System.out.println(budżet.raport());
     }
+
+
 }

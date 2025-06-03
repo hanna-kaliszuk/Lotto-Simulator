@@ -15,6 +15,7 @@ public class TestZarejestrujKolekture {
 
     @BeforeEach
     void setUp() {
+        Centrala.resetInstancji();
         Centrala.inicjalizujCentralę(new Kwota(1_000_000, 0));
     }
 

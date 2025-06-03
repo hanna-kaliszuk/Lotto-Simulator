@@ -38,7 +38,7 @@ public class Losowanie {
     public void zbierzKupony(List<Kolektura> listaKolektur) {
         kuponyBiorąceUdział = listaKolektur.stream()
                 .flatMap(kolektura -> kolektura.getSprzedaneKupony().stream())
-                .filter(kupon -> kupon.getNrLosowania() == this.nrLosowania)
+                .filter(kupon -> kupon.czyNaToLosowanie(this.nrLosowania))
                 .collect(Collectors.toList());
     }
 

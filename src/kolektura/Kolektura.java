@@ -14,18 +14,20 @@ public class Kolektura {
     private List<Kupon> sprzedaneKupony;
     private static int następnyNumer = 1;
     private final int nrKolektury;
-    private static final Centrala centrala = Centrala.getInstancja();
-    private static final BudżetPaństwa budżetPaństwa = BudżetPaństwa.getInstancja();
     private static final Random random = new Random();
 
     public Kolektura() {
         this.nrKolektury = następnyNumer++;
-        centrala.zarejestrujKolekturę(this);
+        Centrala.getInstancja().zarejestrujKolekturę(this);
         this.sprzedaneKupony = new LinkedList<>();
     }
 
+    public static void resetujNumerację() {
+        następnyNumer = 1;
+    }
+
     public void sprzedajKuponZBlankietu(Blankiet blankiet, Gracz gracz) {
-        int najbliższeLosowanie = centrala.getNrNastępnegoLosowania();
+        int najbliższeLosowanie = Centrala.getInstancja().getNrNastępnegoLosowania();
 
         Kwota cena = obliczCenęKuponu(blankiet);
 
@@ -68,7 +70,7 @@ public class Kolektura {
             zakłady.add(new Zakład(generujLosoweLiczby()));
         }
 
-        int najbliższeLosowanie = centrala.getNrNastępnegoLosowania();
+        int najbliższeLosowanie = Centrala.getInstancja().getNrNastępnegoLosowania();
 
         Kupon kupon = new Kupon(this, zakłady, liczbaLosowań, najbliższeLosowanie);
         sprzedaneKupony.add(kupon);
@@ -99,11 +101,11 @@ public class Kolektura {
     private void przekażŚrodki(Kwota kwota) {
         Kwota podatek = new Kwota(kwota);
         podatek.pomnóż(0.20); // 20% podatek
-        budżetPaństwa.dodajPodatek(podatek);
+        BudżetPaństwa.getInstancja().dodajPodatek(podatek);
 
         Kwota doCentali = new Kwota(kwota);
         doCentali.pomnóż(0.80); // 80% do centrali
-        centrala.dodajŚrodki(doCentali);
+        Centrala.getInstancja().dodajŚrodki(doCentali);
     }
 
 

@@ -4,11 +4,13 @@ import finanse.Kwota;
 import kolektura.Kolektura;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class Kupon {
-    private static int nrKuponu = 1;
+    private static int następnyNrKuponu = 1;
+    private int nrKuponu;
     private Kolektura kolekturaWystawiająca;
     private String identyfikator;
     private static final Random random = new Random();
@@ -23,7 +25,7 @@ public class Kupon {
         this.kolekturaWystawiająca = wystawiająca;
         this.zakłady = obstawione;
         this.naIleLosowań = losowania;
-        this.nrKuponu = nrKuponu++;
+        this.nrKuponu = następnyNrKuponu++;
         this.zrealizowany = false;
 
         this.nrLosowań = new ArrayList<>(losowania);
@@ -135,7 +137,23 @@ public class Kupon {
         return identyfikator;
     }
 
+    public boolean czyNaToLosowanie(int nrLosowania) {
+        return nrLosowań.contains(nrLosowania);
+    }
 
+    public List<Zakład> getZakłady() {
+        List<Zakład> kopia = new ArrayList<>(zakłady.size());
+        for (Zakład z : zakłady) {
+            kopia.add(new Zakład(z.getLiczby()));
+        }
+        return kopia;
+    }
 
+    public int getNaIleLosowań() {
+        return naIleLosowań;
+    }
 
+    public int getNumerKuponu() {
+        return nrKuponu;
+    }
 }

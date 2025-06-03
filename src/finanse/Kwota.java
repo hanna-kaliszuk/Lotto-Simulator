@@ -93,4 +93,11 @@ public class Kwota {
         podatek.pomnóż(0.20);
         return podatek;
     }
+
+    @Override
+    public String toString() {
+        long złote = getZłote();
+        int grosze = getGrosze();
+        return String.format("%d zł %02d gr", złote, grosze);
+    }
 }

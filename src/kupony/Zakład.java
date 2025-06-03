@@ -23,4 +23,15 @@ public class Zakład {
     public int[] getLiczby() {
         return Arrays.copyOf(liczby, liczby.length);
     }
+
+    public int sprawdźTrafienia(int[] wylosowaneLiczby) {
+        int trafienia = 0;
+        for (int liczba : liczby) {
+            if (Arrays.binarySearch(wylosowaneLiczby, liczba) >= 0) {
+                trafienia++;
+            }
+        }
+
+        return trafienia;
+    }
 }
