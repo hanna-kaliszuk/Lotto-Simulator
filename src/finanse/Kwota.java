@@ -88,4 +88,9 @@ public class Kwota {
         this.grosze = Math.round(this.grosze / dzielnik);
     }
 
+    public Kwota getPodatek() {
+        Kwota podatek = new Kwota(this);
+        podatek.pomnóż(0.20);
+        return podatek;
+    }
 }
