@@ -12,11 +12,9 @@ public class Zakład {
         this.anulowany = false;
     }
 
-
     public boolean jestWażny() {
         return liczby.length == 6;
     }
-
 
     public boolean czyAnulowany() {
         return anulowany;
