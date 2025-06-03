@@ -8,10 +8,7 @@ import kupony.Blankiet;
 import kupony.Kupon;
 import kupony.Zakład;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Kolektura {
     private List<Kupon> sprzedaneKupony;
@@ -69,6 +66,25 @@ public class Kolektura {
 
         this.przekażŚrodki(cena);
         gracz.odbierzKupon(kupon);
+    }
+
+    private int[] generujLosoweLiczby() {
+        int[] liczby = new int[6];
+        Set<Integer> wylosowane = new HashSet<>();
+
+        int i = 0;
+        while (i < 6) {
+            int losowa = random.nextInt(49) + 1; // liczby od 1 do 49
+
+            if (wylosowane.add(losowa)) {
+                liczby[i] = losowa;
+                i++;
+            }
+        }
+
+        // posortuj liczby dla lepszej czytelności
+        Arrays.sort(liczby);
+        return liczby;
     }
 
     private void przekażŚrodki(Kwota kwota) {
