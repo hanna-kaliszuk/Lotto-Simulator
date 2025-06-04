@@ -17,4 +17,6 @@ public class Minimalista extends Gracz {
         Kolektura kolektura = ulubioneKolektury.get(0); // pobieramy ulubioną kolekturę gracza
         kolektura.sprzedajKuponChybiłTrafił(1, 1, this);
     }
+
+
 }
