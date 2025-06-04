@@ -156,4 +156,10 @@ public class Kupon {
     public int getNumerKuponu() {
         return nrKuponu;
     }
+
+    public boolean czyWziąłUdziałWeWszystkichLosowaniach() {
+        int obecneLosowanie = kolekturaWystawiająca.getAktualneLosowanie();
+        int nrOstatniegoLosowaniaWKtórymKuponMaWziąćUdział = nrLosowań.getLast();
+        return obecneLosowanie >= nrOstatniegoLosowaniaWKtórymKuponMaWziąćUdział; // kupon nie wziął jeszcze udziału we wszystkich losowaniach
+    }
 }

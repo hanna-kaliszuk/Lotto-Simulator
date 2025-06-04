@@ -116,4 +116,8 @@ public class Kolektura {
     public int getNrKolektury() {
         return nrKolektury;
     }
+
+    public int getAktualneLosowanie() {
+        return Centrala.getInstancja().getNrNastępnegoLosowania();
+    }
 }

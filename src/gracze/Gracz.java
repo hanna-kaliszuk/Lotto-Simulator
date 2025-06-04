@@ -12,7 +12,7 @@ public abstract class Gracz {
     private String nazwisko;
     private int pesel;
     private Kwota środki;
-    private List<Kupon> zakupioneKupony;
+    protected List<Kupon> zakupioneKupony;
     protected List<Kolektura> ulubioneKolektury;
 
     public Gracz(String imię, String nazwisko, int pesel, Kwota środki) {
