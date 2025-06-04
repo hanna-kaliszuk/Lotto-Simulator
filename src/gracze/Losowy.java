@@ -3,13 +3,15 @@ package gracze;
 import finanse.Kwota;
 import kolektura.Kolektura;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Losowy extends Gracz {
     private static Random random = new Random();
-    public Losowy(String imię, String nazwisko, int pesel) {
+    public Losowy(String imię, String nazwisko, int pesel, ArrayList<Kolektura> ulubioneKolektury) {
         super(imię, nazwisko, pesel, wygenerujLosoweŚrodki());
+        this.ulubioneKolektury = ulubioneKolektury;
     }
 
     private static Kwota wygenerujLosoweŚrodki() {
