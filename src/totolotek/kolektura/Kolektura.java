@@ -2,12 +2,10 @@ package totolotek.kolektura;
 
 import totolotek.centrala.Centrala;
 import totolotek.centrala.losowanie.Wynik;
-import totolotek.finanse.BudżetPaństwa;
-import totolotek.finanse.Kwota;
+import totolotek.finanse.*;
 import totolotek.gracze.Gracz;
-import totolotek.kupony.Blankiet;
-import totolotek.kupony.Kupon;
-import totolotek.kupony.Zakład;
+import totolotek.kupony.*;
+import wyjątki.*;
 
 import java.util.*;
 
@@ -27,7 +25,19 @@ public class Kolektura {
         następnyNumer = 1;
     }
 
-    public void sprzedajKuponZBlankietu(Blankiet blankiet, Gracz gracz) {
+    public void sprzedajKuponZBlankietu(Blankiet blankiet, Gracz gracz) throws NieprawidłoweDane, BrakŚrodków {
+        if (blankiet == null) {
+            throw new NieprawidłoweDane("Blankiet nie może być null");
+        }
+
+        if (gracz == null) {
+            throw new NieprawidłoweDane("Gracz nie może być null");
+        }
+
+        if (blankiet.ileWażnychZakładów() == 0) {
+            throw new NieprawidłoweDane("Blankiet nie zawiera żadnych ważnych zakładów.");
+        }
+
         int najbliższeLosowanie = Centrala.getInstancja().getNrNastępnegoLosowania();
 
         Kwota cena = obliczCenęKuponu(blankiet);
@@ -35,26 +45,45 @@ public class Kolektura {
         if (gracz.jestWypłacalny(cena)) {
             gracz.zapłać(cena);
         } else {
-            throw new IllegalArgumentException("Gracz nie ma wystarczających środków na zakup kuponu.");
+            throw new BrakŚrodków("Gracz nie ma wystarczających środków na zakup kuponu.");
         }
 
-        Kupon kupon = new Kupon(this, blankiet.getZakłady(), blankiet.getIleLosowań(), najbliższeLosowanie);
+        Kupon kupon = new Kupon(this, blankiet.getZakłady(),
+                blankiet.getIleLosowań(), najbliższeLosowanie);
         sprzedaneKupony.add(kupon);
 
         this.przekażŚrodki(cena);
         gracz.odbierzKupon(kupon);
     }
 
-    private Kwota obliczCenęKuponu(Blankiet blankiet) {
+    private Kwota obliczCenęKuponu(Blankiet blankiet) throws NieprawidłoweDane {
+        if (blankiet == null) {
+            throw new NieprawidłoweDane("Blankiet nie może być null");
+        }
+
         int zakłady = blankiet.ileWażnychZakładów();
         int losowania = blankiet.getIleLosowań();
+
         Kwota cena = new Kwota(3, 0);
         cena.pomnóż(zakłady);
         cena.pomnóż(losowania);
+
         return cena;
     }
 
-    public void sprzedajKuponChybiłTrafił(int liczbaZakładów, int liczbaLosowań, Gracz gracz) {
+    public void sprzedajKuponChybiłTrafił(int liczbaZakładów, int liczbaLosowań, Gracz gracz) throws NieprawidłoweDane, BrakŚrodków {
+        if (liczbaZakładów <= 0 || liczbaZakładów > 8) {
+            throw new NieprawidłoweDane("Liczba zakładów musi być w zakresie od 1 do 8. Podano: " + liczbaZakładów);
+        }
+
+        if (liczbaLosowań < 1 || liczbaLosowań > 10) {
+            throw new NieprawidłoweDane("Liczba losowań musi być w zakresie od 1 do 10. Podano: " + liczbaLosowań);
+        }
+
+        if (gracz == null) {
+            throw new NieprawidłoweDane("Gracz nie może być null");
+        }
+
         Kwota cena = new Kwota(3, 0);
         cena.pomnóż(liczbaZakładów);
         cena.pomnóż(liczbaLosowań);
@@ -62,7 +91,7 @@ public class Kolektura {
         if (gracz.jestWypłacalny(cena)) {
             gracz.zapłać(cena);
         } else {
-            throw new IllegalArgumentException("Gracz nie ma wystarczających środków na zakup kuponu.");
+            throw new BrakŚrodków("Gracz nie ma wystarczających środków na zakup kuponu.");
         }
 
         List<Zakład> zakłady = new ArrayList<>(liczbaZakładów);
@@ -122,13 +151,13 @@ public class Kolektura {
         return Centrala.getInstancja().getNrNastępnegoLosowania();
     }
 
-    public void wydajNagrodę(Gracz gracz, Kupon kupon) {
+    public void wydajNagrodę(Gracz gracz, Kupon kupon) throws NieprawidłoweDane, MożliwaPróbaOszustwa {
         if (!sprzedaneKupony.contains(kupon)) {
-            throw new IllegalArgumentException("Kupon nie został sprzedany przez tę kolekturę.");
+            throw new MożliwaPróbaOszustwa("Kupon nie został sprzedany przez tę kolekturę.");
         }
 
         if (kupon.czyZrealizowany()) {
-            throw new IllegalStateException("Kupon został już zrealizowany.");
+            throw new MożliwaPróbaOszustwa("Kupon został już zrealizowany.");
         }
 
         // gracz oddaje kupon - oznaczamy go jako zrealizowany
@@ -184,10 +213,13 @@ public class Kolektura {
 
     private Kwota odprowadźPodatekZaNagrodę(Kwota nagrodaZaZakład) {
         Kwota podatek = new Kwota(nagrodaZaZakład);
+
         podatek.pomnóż(0.10); // 10% podatek od nagrody
         BudżetPaństwa.getInstancja().dodajPodatek(podatek);
+
         Kwota poOpodatkowaniu = new Kwota(nagrodaZaZakład);
         poOpodatkowaniu.odejmij(podatek);
+
         return poOpodatkowaniu;
     }
 }
