@@ -9,13 +9,13 @@ public class Blankiet {
     private final int ileLosowań;
     private final List<Zakład> zakłady;
 
-    public Blankiet(List<Zakład> zakłady, int losowania) throws NieprawidłoweDaneZakładu, NieprawidłoweDaneLosowania {
+    public Blankiet(List<Zakład> zakłady, int losowania) throws NieprawidłoweDane {
         if (zakłady == null || zakłady.isEmpty()) {
-            throw new NieprawidłoweDaneZakładu("Lista zakładów nie może być pusta");
+            throw new NieprawidłoweDane("Lista zakładów nie może być pusta");
         }
 
         if (losowania < 1 || losowania > 10) {
-            throw new NieprawidłoweDaneLosowania("Liczba losowań musi być w zakresie od 1 do 10");
+            throw new NieprawidłoweDane("Liczba losowań musi być w zakresie od 1 do 10");
         }
 
         this.zakłady = zakłady;
@@ -61,7 +61,7 @@ public class Blankiet {
         return ileLosowań;
     }
 
-    public List<Zakład> getZakłady() throws NieprawidłoweDaneZakładu {
+    public List<Zakład> getZakłady() throws NieprawidłoweDane {
         List<Zakład> kopia = new ArrayList<>(zakłady.size());
 
         for (Zakład z : zakłady) {

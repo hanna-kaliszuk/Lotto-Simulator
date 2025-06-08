@@ -1,6 +1,6 @@
 package totolotek.kupony;
 
-import wyjątki.NieprawidłoweDaneZakładu;
+import wyjątki.NieprawidłoweDane;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -10,10 +10,10 @@ public class Zakład {
     private int[] liczby;
     private boolean anulowany;
 
-    public Zakład(int[] liczby) throws NieprawidłoweDaneZakładu {
+    public Zakład(int[] liczby) throws NieprawidłoweDane {
         for (int liczba : liczby) {
             if (liczba < 1 || liczba > 49) {
-                throw new NieprawidłoweDaneZakładu("Liczby muszą być w zakresie od 1 do 49");
+                throw new NieprawidłoweDane("Liczby muszą być w zakresie od 1 do 49");
             }
         }
 

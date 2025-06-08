@@ -2,6 +2,7 @@ package totolotek.kupony;
 
 import totolotek.finanse.Kwota;
 import totolotek.kolektura.Kolektura;
+import wyjątki.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,18 +10,33 @@ import java.util.Random;
 
 public class Kupon {
     private static int następnyNrKuponu = 1;
-    private int nrKuponu;
-    private Kolektura kolekturaWystawiająca;
-    private String identyfikator;
+    private final int nrKuponu;
+    private final Kolektura kolekturaWystawiająca;
+    private final String identyfikator;
     private static final Random random = new Random();
-    private List<Zakład> zakłady;
-    private int naIleLosowań;
-    private Kwota cena;
+    private final List<Zakład> zakłady;
+    private final int naIleLosowań;
+    private final Kwota cena;
     private boolean zrealizowany; // gracz odebrał wygrane za ten kupon
-    private List<Integer> nrLosowań;
+    private final List<Integer> nrLosowań;
 
+    public Kupon(Kolektura wystawiająca, List<Zakład> obstawione, int losowania, int najbliższeLosowanie) throws NieprawidłoweDane {
+        if (wystawiająca == null) {
+            throw new NieprawidłoweDane("Kolektura wystawiająca nie może być null");
+        }
 
-    public Kupon(Kolektura wystawiająca, List<Zakład> obstawione, int losowania, int najbliższeLosowanie) {
+        if (obstawione == null || obstawione.isEmpty()) {
+            throw new NieprawidłoweDane("Lista zakładów nie może być pusta");
+        }
+
+        if (losowania < 1 || losowania > 10) {
+            throw new NieprawidłoweDane("Liczba losowań musi być w zakresie od 1 do 10");
+        }
+
+        if (najbliższeLosowanie < 1) {
+            throw new NieprawidłoweDane("Numer najbliższego losowania musi być większy lub równy 1");
+        }
+
         this.kolekturaWystawiająca = wystawiająca;
         this.zakłady = obstawione;
         this.naIleLosowań = losowania;
@@ -38,14 +54,17 @@ public class Kupon {
 
     private Kwota obliczCenę(List<Zakład> zakłady, int losowania) {
         int ważneZakłady = 0;
+
         for (Zakład z : zakłady) {
             if (z.jestWażny() && !z.czyAnulowany()) {
                 ważneZakłady++;
             }
         }
+
         Kwota cena = new Kwota(3, 0); // cena bazowa za zakład
         cena.pomnóż(ważneZakłady);
         cena.pomnóż(losowania);
+
         return cena;
     }
 
@@ -60,10 +79,7 @@ public class Kupon {
         // obliczanie sumy kontrolnej
         int sumaKontrolna = ObliczSumęKontrolną(nrPorządkowy, nrKolektury, znacznik.toString());
 
-        String identyfikator = nrPorządkowy + "-" + nrKolektury + "-" + znacznik + "-" +
-                String.format("%02d", sumaKontrolna);
-
-        return identyfikator;
+        return nrPorządkowy + "-" + nrKolektury + "-" + znacznik + "-" + String.format("%02d", sumaKontrolna);
     }
 
     private int ObliczSumęKontrolną(int nrPorządkowy, int nrKolektury, String znacznik) {
@@ -71,7 +87,7 @@ public class Kupon {
         suma += sumaCyfr(nrPorządkowy);
         suma += sumaCyfr(nrKolektury);
 
-        for(char c : znacznik.toCharArray()) {
+        for (char c : znacznik.toCharArray()) {
             suma += Character.getNumericValue(c);
         }
 
@@ -91,9 +107,11 @@ public class Kupon {
 
     public String getSprawozdzanieKuponu() {
         StringBuilder sb = new StringBuilder();
+
         sb.append("Identyfikator kuponu: ").append(identyfikator).append("\n");
         sb.append("Cena kuponu: ").append(cena).append("\n");
         sb.append("W tym podatek: ").append(cena.getPodatek()).append("\n");
+
         return sb.toString();
     }
 
@@ -103,7 +121,7 @@ public class Kupon {
 
         // 1. identyfikator kuponu
         sb.append("KUPON NR ");
-        sb.append(this.getIdentyfikator() + "\n");
+        sb.append(this.getIdentyfikator()).append("\n");
 
         // 2. ponumerowana lista kolejnych zakładów z wyrównanymi wylosowanymi liczbami do prawej
         for (int i = 0; i < zakłady.size(); i++) {
@@ -140,12 +158,14 @@ public class Kupon {
         return nrLosowań.contains(nrLosowania);
     }
 
-    public List<Zakład> getZakłady() {
-        List<Zakład> kopia = new ArrayList<>(zakłady.size());
-        for (Zakład z : zakłady) {
-            kopia.add(new Zakład(z.getLiczby()));
-        }
-        return kopia;
+    public List<Zakład> getZakłady() throws NieprawidłoweDane {
+
+            List<Zakład> kopia = new ArrayList<>(zakłady.size());
+            for (Zakład z : zakłady) {
+                kopia.add(new Zakład(z.getLiczby()));
+            }
+            return kopia;
+
     }
 
     public int getNaIleLosowań() {
@@ -159,7 +179,8 @@ public class Kupon {
     public boolean czyWziąłUdziałWeWszystkichLosowaniach() {
         int obecneLosowanie = kolekturaWystawiająca.getAktualneLosowanie();
         int nrOstatniegoLosowaniaWKtórymKuponMaWziąćUdział = nrLosowań.getLast();
-        return obecneLosowanie >= nrOstatniegoLosowaniaWKtórymKuponMaWziąćUdział; // kupon nie wziął jeszcze udziału we wszystkich losowaniach
+
+        return obecneLosowanie >= nrOstatniegoLosowaniaWKtórymKuponMaWziąćUdział;
     }
 
     public boolean czyZrealizowany() {
@@ -174,5 +195,9 @@ public class Kupon {
 
     public void zrealizuj() {
         this.zrealizowany = true;
+    }
+
+    public Kwota getCena() {
+        return new Kwota(cena);
     }
 }

@@ -2,13 +2,13 @@ package testy.done;
 
 import totolotek.kupony.Zakład;
 import org.junit.jupiter.api.Test;
-import wyjątki.NieprawidłoweDaneZakładu;
+import wyjątki.NieprawidłoweDane;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ZakładTest {
     @Test
-    void testKonstruktor() throws NieprawidłoweDaneZakładu {
+    void testKonstruktor() throws NieprawidłoweDane {
         int[] liczby = {1, 15, 23, 34, 42, 49};
         Zakład zakład = new Zakład(liczby);
 
@@ -17,13 +17,13 @@ public class ZakładTest {
     }
 
     @Test
-    void testKonstrunktorZłeLiczby() throws NieprawidłoweDaneZakładu {
+    void testKonstrunktorZłeLiczby() throws NieprawidłoweDane {
         int[] liczby = {1, 2, 3};
         Zakład z1 = new Zakład(liczby);
         assertFalse(z1.jestWażny(), "Zakład z mniej niż 6 liczbami powinien być nieważny");
 
         int[] liczby2 = {1, 50, 0, 34, 32, 32};
-        assertThrows(NieprawidłoweDaneZakładu.class, () -> new Zakład(liczby2),
+        assertThrows(NieprawidłoweDane.class, () -> new Zakład(liczby2),
                 "Zakład z liczbami spoza zakresu powinien rzucić wyjątek");
 
         int[] liczby3 = {1, 2, 3, 4, 5, 6, 7, 8};
@@ -36,7 +36,7 @@ public class ZakładTest {
     }
 
     @Test
-    void testAnuluj() throws NieprawidłoweDaneZakładu {
+    void testAnuluj() throws NieprawidłoweDane {
         int[] liczby = {1, 15, 23, 34, 42, 49};
         Zakład zakład = new Zakład(liczby);
 
@@ -49,7 +49,7 @@ public class ZakładTest {
 
 
     @Test
-    void testGetLiczby() throws NieprawidłoweDaneZakładu {
+    void testGetLiczby() throws NieprawidłoweDane {
         int[] liczby = {1, 15, 23, 34, 42, 49};
         Zakład zakład = new Zakład(liczby);
 
@@ -60,7 +60,7 @@ public class ZakładTest {
     }
 
     @Test
-    void testSprawdźTrafienia() throws NieprawidłoweDaneZakładu {
+    void testSprawdźTrafienia() throws NieprawidłoweDane {
         int[] liczby = {1, 15, 23, 34, 42, 49};
         int[] wylosowane = {1, 15, 23, 10, 20, 30};
 
