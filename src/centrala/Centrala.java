@@ -108,7 +108,7 @@ public class Centrala {
         }
 
         Kwota wIII = new Kwota(pIII);
-        if ( zIII == 0) {
+        if (zIII == 0) {
             wIII = new Kwota(0, 0);
         } else {
             wIII.podziel( zIII);
@@ -217,5 +217,30 @@ public class Centrala {
         } else {
             throw new IllegalArgumentException("Kwota do dodania musi być nieujemna.");
         }
+    }
+
+    public Wynik getWynikLosowania(int nrLosowania) {
+        if (nrLosowania < 1 || nrLosowania > nrOstatniegoLosowania) {
+            throw new IllegalArgumentException("Nieprawidłowy numer losowania: " + nrLosowania);
+        }
+
+        // binary search do znalezienia odpowiedniego losowania
+        int lewy = 0;
+        int prawy = historiaLosowań.size() - 1;
+
+        while (lewy <= prawy) {
+            int środek = (lewy + prawy) / 2;
+            Wynik wynik = historiaLosowań.get(środek);
+
+            if (wynik.getNrLosowania() == nrLosowania) {
+                return wynik;
+            } else if (wynik.getNrLosowania() < nrLosowania) {
+                lewy = środek + 1;
+            } else {
+                prawy = środek - 1;
+            }
+        }
+
+        throw new IllegalArgumentException("Nie znaleziono wyniku dla losowania nr: " + nrLosowania);
     }
 }

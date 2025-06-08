@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Gracz {
-    private String imię;
-    private String nazwisko;
-    private int pesel;
+    private final String imię;
+    private final String nazwisko;
+    private final int pesel;
     private Kwota środki;
     protected List<Kupon> zakupioneKupony;
     protected List<Kolektura> ulubioneKolektury;
@@ -62,4 +62,24 @@ public abstract class Gracz {
     }
 
     public abstract void kupKupon();
+
+    public void odbierzNagrodę(Kupon kupon, Kolektura kolektura) {
+        kolektura.wydajNagrodę(this, kupon);
+    }
+
+    public void odbierzŚrodki(Kwota łącznaWygrana) {
+        if (łącznaWygrana != null) {
+            this.środki.dodaj(łącznaWygrana);
+        } else {
+            throw new IllegalArgumentException("Łączna wygrana nie może być null.");
+        }
+    }
+
+    public void oddajKupon(Kupon kupon) {
+        if (zakupioneKupony.contains(kupon)) {
+            zakupioneKupony.remove(kupon);
+        } else {
+            throw new IllegalArgumentException("Kupon nie należy do tego gracza.");
+        }
+    }
 }

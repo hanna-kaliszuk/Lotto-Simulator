@@ -11,6 +11,11 @@ class TestGracz extends Gracz {
     public TestGracz(String imię, String nazwisko, int pesel, Kwota środki) {
         super(imię, nazwisko, pesel, środki);
     }
+
+    @Override
+    public void kupKupon() {
+
+    }
 }
 
 public class GraczTest {

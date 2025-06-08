@@ -162,4 +162,18 @@ public class Kupon {
         int nrOstatniegoLosowaniaWKtórymKuponMaWziąćUdział = nrLosowań.getLast();
         return obecneLosowanie >= nrOstatniegoLosowaniaWKtórymKuponMaWziąćUdział; // kupon nie wziął jeszcze udziału we wszystkich losowaniach
     }
+
+    public boolean czyZrealizowany() {
+        return zrealizowany;
+    }
+
+    public List<Integer> getNrLosowań() {
+        List<Integer> kopia = new ArrayList<>(nrLosowań.size());
+        kopia.addAll(nrLosowań);
+        return kopia;
+    }
+
+    public void zrealizuj() {
+        this.zrealizowany = true;
+    }
 }

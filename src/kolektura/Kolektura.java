@@ -1,6 +1,7 @@
 package kolektura;
 
 import centrala.Centrala;
+import centrala.losowanie.Wynik;
 import finanse.BudżetPaństwa;
 import finanse.Kwota;
 import gracze.Gracz;
@@ -119,5 +120,74 @@ public class Kolektura {
 
     public int getAktualneLosowanie() {
         return Centrala.getInstancja().getNrNastępnegoLosowania();
+    }
+
+    public void wydajNagrodę(Gracz gracz, Kupon kupon) {
+        if (!sprzedaneKupony.contains(kupon)) {
+            throw new IllegalArgumentException("Kupon nie został sprzedany przez tę kolekturę.");
+        }
+
+        if (kupon.czyZrealizowany()) {
+            throw new IllegalStateException("Kupon został już zrealizowany.");
+        }
+
+        // gracz oddaje kupon - oznaczamy go jako zrealizowany
+        gracz.oddajKupon(kupon);
+        kupon.zrealizuj();
+
+        // zmienna do przechowywania łącznej kwoty, którą należy wypłacić graczowi
+        Kwota łącznaWygrana = new Kwota(0, 0);
+        int ostatnieLosowanie = getAktualneLosowanie() - 1;
+        Kwota prógNagrodyWysokiej = new Kwota(2280, 0);
+
+        List<Integer> losowaniaKuponu = kupon.getNrLosowań();
+
+        for (int nrLosowania : losowaniaKuponu) {
+            if (nrLosowania <= ostatnieLosowanie) {
+                Wynik wynik = Centrala.getInstancja().getWynikLosowania(nrLosowania);
+
+                for (Zakład zakład : kupon.getZakłady()) {
+                    if (!zakład.czyAnulowany() && zakład.jestWażny()) {
+                        int trafienia = zakład.sprawdźTrafienia(wynik.getWylosowaneLiczby());
+
+                        if (trafienia >= 3) {
+                            Kwota nagrodaZaZakład = obliczNagrodę(trafienia, wynik);
+                            łącznaWygrana.dodaj(nagrodaZaZakład);
+
+                            // sprawdzamy, czy to najwyższa nagroda do tej pory
+                            if (nagrodaZaZakład.porównaj(prógNagrodyWysokiej) >= 0) {
+                                Kwota poOpodatkowaniu = this.odprowadźPodatekZaNagrodę(nagrodaZaZakład);
+                                łącznaWygrana.dodaj(poOpodatkowaniu);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (łącznaWygrana.kwotaNieujemna()) {
+            Centrala.getInstancja().wydajNagrodę(łącznaWygrana);
+            gracz.odbierzŚrodki(łącznaWygrana);
+        }
+
+    }
+
+    private Kwota obliczNagrodę(int trafienia, Wynik wynik) {
+        Kwota nagroda = new Kwota(0, 0);
+
+        if (trafienia < 3) {
+            return nagroda; // brak nagrody za mniej niż 3 trafienia
+        }
+
+        return wynik.getNagrodaZaTrafienia(trafienia);
+    }
+
+    private Kwota odprowadźPodatekZaNagrodę(Kwota nagrodaZaZakład) {
+        Kwota podatek = new Kwota(nagrodaZaZakład);
+        podatek.pomnóż(0.10); // 10% podatek od nagrody
+        BudżetPaństwa.getInstancja().dodajPodatek(podatek);
+        Kwota poOpodatkowaniu = new Kwota(nagrodaZaZakład);
+        poOpodatkowaniu.odejmij(podatek);
+        return poOpodatkowaniu;
     }
 }

@@ -2,6 +2,8 @@ package centrala.losowanie;
 
 import finanse.Kwota;
 
+import java.util.Arrays;
+
 public class Wynik {
     private final Losowanie losowanie;
     private final Kwota[] wygraneKwoty;
@@ -21,7 +23,7 @@ public class Wynik {
         sb.append("Wyniki losowania nr ").append(losowanie.getNrLosowania()).append(":\n");
 
         sb.append("Wylosowane liczby: ");
-        sb.append(losowanie.getWylosowaneLiczby()).append("\n");
+        sb.append(Arrays.toString(losowanie.getWylosowaneLiczby())).append("\n");
 
         sb.append("Pula nagród I stopnia: ").append(puleNagród[0]).append("\n");
 
@@ -47,5 +49,30 @@ public class Wynik {
 
     public void podajWynik() {
         System.out.println(this);
+    }
+
+
+    public int[] getWylosowaneLiczby() {
+        return losowanie.getWylosowaneLiczby();
+    }
+
+    public int getNrLosowania() {
+        return losowanie.getNrLosowania();
+    }
+
+    public Kwota getNagrodaZaTrafienia(int trafienia) {
+        if (trafienia < 0 || trafienia > 6) {
+            throw new IllegalArgumentException("Trafienia muszą być w zakresie od 0 do 6");
+        }
+
+        int index = trafienia - 3; // indeksowanie od 0
+        if (index < 0 || index >= wygraneKwoty.length) {
+            throw new IllegalArgumentException("Nieprawidłowa liczba trafień: " + trafienia);
+        }
+
+        Kwota pula = puleNagród[index];
+        Kwota wygrana = new Kwota(pula);
+        wygrana.podziel(trafioneZakłady[index]);
+        return wygrana;
     }
 }
