@@ -1,13 +1,13 @@
-package kolektura;
+package totolotek.kolektura;
 
-import centrala.Centrala;
-import centrala.losowanie.Wynik;
-import finanse.BudżetPaństwa;
-import finanse.Kwota;
-import gracze.Gracz;
-import kupony.Blankiet;
-import kupony.Kupon;
-import kupony.Zakład;
+import totolotek.centrala.Centrala;
+import totolotek.centrala.losowanie.Wynik;
+import totolotek.finanse.BudżetPaństwa;
+import totolotek.finanse.Kwota;
+import totolotek.gracze.Gracz;
+import totolotek.kupony.Blankiet;
+import totolotek.kupony.Kupon;
+import totolotek.kupony.Zakład;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package kupony;
+package totolotek.kupony;
 
 import java.util.Arrays;
 

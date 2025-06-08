@@ -1,9 +1,9 @@
-package centrala.losowanie;
+package totolotek.centrala.losowanie;
 
-import centrala.Centrala;
-import kolektura.Kolektura;
-import kupony.Kupon;
-import kupony.Zakład;
+import totolotek.centrala.Centrala;
+import totolotek.kolektura.Kolektura;
+import totolotek.kupony.Kupon;
+import totolotek.kupony.Zakład;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;

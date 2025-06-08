@@ -1,8 +1,7 @@
-package testy;
+package testy.dodatkowe;
 
-import finanse.Kwota;
-import gracze.Gracz;
-import kupony.Kupon;
+import totolotek.finanse.Kwota;
+import totolotek.gracze.Gracz;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

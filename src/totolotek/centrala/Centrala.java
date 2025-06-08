@@ -1,9 +1,9 @@
-package centrala;
+package totolotek.centrala;
 
-import centrala.losowanie.*;
-import finanse.BudżetPaństwa;
-import finanse.Kwota;
-import kolektura.Kolektura;
+import totolotek.centrala.losowanie.*;
+import totolotek.finanse.BudżetPaństwa;
+import totolotek.finanse.Kwota;
+import totolotek.kolektura.Kolektura;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +62,7 @@ public class Centrala {
         // 2. generujemy nowe losowanie
         Losowanie losowanie = new Losowanie(nrLosowania);
 
-        // 3. zbieramy wszystkie kupony uczestniczące w losowaniu
+        // 3. zbieramy wszystkie totolotek.kupony uczestniczące w losowaniu
         losowanie.zbierzKupony(listaKolektur);
 
         // 4. obliczamy pulę nagród

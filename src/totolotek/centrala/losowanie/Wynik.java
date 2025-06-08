@@ -1,6 +1,6 @@
-package centrala.losowanie;
+package totolotek.centrala.losowanie;
 
-import finanse.Kwota;
+import totolotek.finanse.Kwota;
 
 import java.util.Arrays;
 

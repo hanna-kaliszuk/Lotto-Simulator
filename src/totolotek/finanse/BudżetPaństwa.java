@@ -1,4 +1,4 @@
-package finanse;
+package totolotek.finanse;
 
 public class BudżetPaństwa {
     private static BudżetPaństwa instancja;

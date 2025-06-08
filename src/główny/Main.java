@@ -1,9 +1,5 @@
 package główny;
 
-import centrala.Centrala;
-import finanse.BudżetPaństwa;
-import finanse.Kwota;
-
 public class Main {
     public static void main(String[] args) {
 //        BudżetPaństwa budżet = BudżetPaństwa.getInstancja();

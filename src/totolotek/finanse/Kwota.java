@@ -1,4 +1,4 @@
-package finanse;
+package totolotek.finanse;
 
 public class Kwota {
     private long grosze;

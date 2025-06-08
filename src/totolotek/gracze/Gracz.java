@@ -1,8 +1,8 @@
-package gracze;
+package totolotek.gracze;
 
-import finanse.Kwota;
-import kolektura.Kolektura;
-import kupony.Kupon;
+import totolotek.finanse.Kwota;
+import totolotek.kolektura.Kolektura;
+import totolotek.kupony.Kupon;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +37,7 @@ public abstract class Gracz {
         if (zakupioneKupony.isEmpty()) {
             sb.append("Nie posiada żadnych kuponów.");
         } else {
-            sb.append("Posiadane kupony:\n");
+            sb.append("Posiadane totolotek.kupony:\n");
 
             for (Kupon kupon : zakupioneKupony) {
                 sb.append(" - ").append(kupon.getIdentyfikator());

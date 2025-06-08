@@ -1,8 +1,8 @@
-package gracze;
+package totolotek.gracze;
 
-import finanse.Kwota;
-import kolektura.Kolektura;
-import kupony.Blankiet;
+import totolotek.finanse.Kwota;
+import totolotek.kolektura.Kolektura;
+import totolotek.kupony.Blankiet;
 
 import java.util.ArrayList;
 import java.util.List;

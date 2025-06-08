@@ -1,8 +1,8 @@
-package testy;
+package testy.dodatkowe;
 
-import centrala.Centrala;
-import finanse.Kwota;
-import kupony.Zakład;
+import totolotek.centrala.Centrala;
+import totolotek.finanse.Kwota;
+import totolotek.kupony.Zakład;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

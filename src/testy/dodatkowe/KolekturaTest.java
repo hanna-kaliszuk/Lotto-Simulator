@@ -1,9 +1,8 @@
-package testy;
+package testy.dodatkowe;
 
-import centrala.Centrala;
-import finanse.BudżetPaństwa;
-import finanse.Kwota;
-import kolektura.Kolektura;
+import totolotek.centrala.Centrala;
+import totolotek.finanse.Kwota;
+import totolotek.kolektura.Kolektura;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,10 +25,10 @@ public class KolekturaTest {
         Kolektura kolektura2 = new Kolektura();
 
         assertNotEquals(kolektura1.getNrKolektury(), kolektura2.getNrKolektury(),
-                "Each kolektura should have a unique number");
+                "Each totolotek.kolektura should have a unique number");
 
         assertTrue(kolektura1.getSprzedaneKupony().isEmpty(),
-                "New kolektura should have no sold coupons");
+                "New totolotek.kolektura should have no sold coupons");
     }
 
     @Test
@@ -38,9 +37,9 @@ public class KolekturaTest {
         Kolektura k2 = new Kolektura();
         Kolektura k3 = new Kolektura();
 
-        assertEquals(1, k1.getNrKolektury(), "First kolektura should have number 1");
-        assertEquals(2, k2.getNrKolektury(), "Second kolektura should have number 2");
-        assertEquals(3, k3.getNrKolektury(), "Third kolektura should have number 3");
+        assertEquals(1, k1.getNrKolektury(), "First totolotek.kolektura should have number 1");
+        assertEquals(2, k2.getNrKolektury(), "Second totolotek.kolektura should have number 2");
+        assertEquals(3, k3.getNrKolektury(), "Third totolotek.kolektura should have number 3");
     }
 
     @Test
@@ -49,6 +48,6 @@ public class KolekturaTest {
 
         assertNotNull(kolektura.getSprzedaneKupony(), "Should return a list");
         assertEquals(0, kolektura.getSprzedaneKupony().size(),
-                "New kolektura should have empty list");
+                "New totolotek.kolektura should have empty list");
     }
 }

@@ -1,10 +1,9 @@
-package kupony;
+package totolotek.kupony;
 
-import finanse.Kwota;
-import kolektura.Kolektura;
+import totolotek.finanse.Kwota;
+import totolotek.kolektura.Kolektura;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 

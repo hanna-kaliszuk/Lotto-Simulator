@@ -1,7 +1,7 @@
-package testy;
+package testy.dodatkowe;
 
-import finanse.BudżetPaństwa;
-import finanse.Kwota;
+import totolotek.finanse.BudżetPaństwa;
+import totolotek.finanse.Kwota;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
