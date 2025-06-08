@@ -1,5 +1,7 @@
 package totolotek.kupony;
 
+import wyjątki.NieprawidłoweDaneZakładu;
+
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
@@ -8,14 +10,26 @@ public class Zakład {
     private int[] liczby;
     private boolean anulowany;
 
-    public Zakład(int[] liczby) {
-        // dodaj sprawdzenie długości tablicy i czy ma 6 różnych liczb z zakresu 1-49
+    public Zakład(int[] liczby) throws NieprawidłoweDaneZakładu {
+        for (int liczba : liczby) {
+            if (liczba < 1 || liczba > 49) {
+                throw new NieprawidłoweDaneZakładu("Liczby muszą być w zakresie od 1 do 49");
+            }
+        }
+
         this.liczby = Arrays.copyOf(liczby, liczby.length);
+        Arrays.sort(this.liczby);
         this.anulowany = false;
     }
 
     public boolean jestWażny() {
-        return liczby.length == 6;
+        Set<Integer> unikalneLiczby = new TreeSet<>();
+        for (int liczba : liczby) {
+            if (!unikalneLiczby.add(liczba)) {
+                return false; // duplikat liczby
+            }
+        }
+        return liczby.length == 6; // musi być dokładnie 6 liczb
     }
 
     public boolean czyAnulowany() {
