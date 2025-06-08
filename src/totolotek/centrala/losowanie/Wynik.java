@@ -67,12 +67,12 @@ public class Wynik {
 
     public Kwota getNagrodaZaTrafienia(int trafienia) throws NieprawidłoweDane {
         if (trafienia < 0 || trafienia > 6) {
-            throw new IllegalArgumentException("Trafienia muszą być w zakresie od 0 do 6");
+            throw new NieprawidłoweDane("Trafienia muszą być w zakresie od 0 do 6");
         }
 
         int index = trafienia - 3; // indeksowanie od 0
         if (index < 0 || index >= wygraneKwoty.length) {
-            throw new IllegalArgumentException("Nieprawidłowa liczba trafień: " + trafienia);
+            throw new NieprawidłoweDane("Nieprawidłowa liczba trafień: " + trafienia);
         }
 
         Kwota pula = puleNagród[index];

@@ -27,7 +27,6 @@ public class Centrala {
 
     private List<Wynik> historiaLosowań;
     private List<Kolektura> listaKolektur;
-    private static int nrOstatniejZarejestrowanejKolektury = 0;
 
     private int nrOstatniegoLosowania;
 
@@ -39,16 +38,9 @@ public class Centrala {
         this.nrOstatniegoLosowania = 0;
     }
 
-    public static void resetLiczników() {
-        nrOstatniejZarejestrowanejKolektury = 0;
-        Kolektura.resetujNumerację();
-    }
-
     public static void resetInstancji() {
         instancja = null;
-        resetLiczników();
     }
-
 
     public static void inicjalizujCentralę(Kwota k) throws NieprawidłoweDane {
         if (instancja == null) {
@@ -202,7 +194,6 @@ public class Centrala {
     }
 
     public void zarejestrujKolekturę(Kolektura k) {
-        nrOstatniejZarejestrowanejKolektury++;
         listaKolektur.add(k);
     }
 
@@ -225,13 +216,13 @@ public class Centrala {
         if (doCentali.kwotaNieujemna()) {
             this.środki.dodaj(doCentali);
         } else {
-            throw new IllegalArgumentException("Kwota do dodania musi być nieujemna.");
+            throw new NieprawidłoweDane("Kwota do dodania musi być nieujemna.");
         }
     }
 
-    public Wynik getWynikLosowania(int nrLosowania) {
+    public Wynik getWynikLosowania(int nrLosowania) throws NieprawidłoweDane {
         if (nrLosowania < 1 || nrLosowania > nrOstatniegoLosowania) {
-            throw new IllegalArgumentException("Nieprawidłowy numer losowania: " + nrLosowania);
+            throw new NieprawidłoweDane("Nieprawidłowy numer losowania: " + nrLosowania);
         }
 
         // binary search do znalezienia odpowiedniego losowania
@@ -251,6 +242,11 @@ public class Centrala {
             }
         }
 
-        throw new IllegalArgumentException("Nie znaleziono wyniku dla losowania nr: " + nrLosowania);
+        throw new NieprawidłoweDane("Nie znaleziono wyniku dla losowania nr: " + nrLosowania);
+    }
+
+    // do testowania
+    public int ileKolektur() {
+        return listaKolektur.size();
     }
 }
