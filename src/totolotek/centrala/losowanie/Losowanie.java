@@ -4,6 +4,7 @@ import totolotek.centrala.Centrala;
 import totolotek.kolektura.Kolektura;
 import totolotek.kupony.Kupon;
 import totolotek.kupony.Zakład;
+import wyjątki.NieprawidłoweDane;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -44,7 +45,13 @@ public class Losowanie {
 
     public int ileZakładów() {
         zakładyBiorąceUdział = kuponyBiorąceUdział.stream()
-                .flatMap(kupon -> kupon.getZakłady().stream())
+                .flatMap(kupon -> {
+                    try {
+                        return kupon.getZakłady().stream();
+                    } catch (NieprawidłoweDane e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .collect(Collectors.toList());
 
         return zakładyBiorąceUdział.size();

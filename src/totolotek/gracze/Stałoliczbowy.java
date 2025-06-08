@@ -5,6 +5,8 @@ import totolotek.kolektura.Kolektura;
 import totolotek.kupony.Blankiet;
 import totolotek.kupony.Kupon;
 import totolotek.kupony.Zakład;
+import wyjątki.BrakŚrodków;
+import wyjątki.NieprawidłoweDane;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +26,7 @@ public class Stałoliczbowy extends Gracz {
     }
 
     @Override
-    public void kupKupon() {
+    public void kupKupon() throws NieprawidłoweDane, BrakŚrodków {
         // sprawdzamy, czy ostatni zakupiony przez gracza kupon wziął udział we wszystkich losowaniach, w których miał
         if (!this.możeKupićNowy()) return;
         Kolektura kolektura = wybierzKolejnąKolekturę(ulubioneKolektury, nrNastępnejKolektury);
@@ -39,10 +41,14 @@ public class Stałoliczbowy extends Gracz {
     }
 
     private List<Zakład> wygenerujZakład() {
-        List<Zakład> zakłady = new ArrayList<>(1);
-        Zakład zakład = new Zakład(ulubioneLiczby);
-        zakłady.add(zakład);
-        return zakłady;
+        try {
+            List<Zakład> zakłady = new ArrayList<>(1);
+            Zakład zakład = new Zakład(ulubioneLiczby);
+            zakłady.add(zakład);
+            return zakłady;
+        } catch (NieprawidłoweDane e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean możeKupićNowy() {

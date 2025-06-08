@@ -2,6 +2,8 @@ package totolotek.gracze;
 
 import totolotek.finanse.Kwota;
 import totolotek.kolektura.Kolektura;
+import wyjątki.BrakŚrodków;
+import wyjątki.NieprawidłoweDane;
 
 import java.util.ArrayList;
 
@@ -13,7 +15,7 @@ public class Minimalista extends Gracz {
     }
 
     @Override
-    public void kupKupon() {
+    public void kupKupon() throws NieprawidłoweDane, BrakŚrodków {
         Kolektura kolektura = ulubioneKolektury.get(0); // pobieramy ulubioną kolekturę gracza
         kolektura.sprzedajKuponChybiłTrafił(1, 1, this);
     }

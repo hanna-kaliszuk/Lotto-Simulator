@@ -3,13 +3,15 @@ package totolotek.gracze;
 import totolotek.finanse.Kwota;
 import totolotek.kolektura.Kolektura;
 import totolotek.kupony.Blankiet;
+import wyjątki.BrakŚrodków;
+import wyjątki.NieprawidłoweDane;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Stałoblankietowy extends Gracz {
-    private Blankiet blankiet;
-    private int stała;
+    private final Blankiet blankiet;
+    private final int stała;
     int nrNastępnejKolektury;
 
     public Stałoblankietowy(String imię, String nazwisko, int pesel, Kwota środki, Blankiet blankiet, int stała, ArrayList<Kolektura> ulubioneKolektury) {
@@ -21,7 +23,7 @@ public class Stałoblankietowy extends Gracz {
     }
 
     @Override
-    public void kupKupon() {
+    public void kupKupon() throws NieprawidłoweDane, BrakŚrodków {
         Kolektura kolektura = wybierzKolejnąKolekturę(ulubioneKolektury, nrNastępnejKolektury);
         kolektura.sprzedajKuponZBlankietu(blankiet, this);
     }

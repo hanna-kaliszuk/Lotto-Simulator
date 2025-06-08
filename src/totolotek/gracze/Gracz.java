@@ -3,6 +3,9 @@ package totolotek.gracze;
 import totolotek.finanse.Kwota;
 import totolotek.kolektura.Kolektura;
 import totolotek.kupony.Kupon;
+import wyjątki.BrakŚrodków;
+import wyjątki.MożliwaPróbaOszustwa;
+import wyjątki.NieprawidłoweDane;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -61,9 +64,9 @@ public abstract class Gracz {
         zakupioneKupony.add(kupon);
     }
 
-    public abstract void kupKupon();
+    public abstract void kupKupon() throws NieprawidłoweDane, BrakŚrodków;
 
-    public void odbierzNagrodę(Kupon kupon, Kolektura kolektura) {
+    public void odbierzNagrodę(Kupon kupon, Kolektura kolektura) throws NieprawidłoweDane, MożliwaPróbaOszustwa {
         kolektura.wydajNagrodę(this, kupon);
     }
 
@@ -81,5 +84,16 @@ public abstract class Gracz {
         } else {
             throw new IllegalArgumentException("Kupon nie należy do tego gracza.");
         }
+    }
+
+    public int ileKuponów() {
+        return zakupioneKupony.size();
+    }
+
+    public Kupon getKupony(int nr) {
+        if (nr < 0 || nr >= zakupioneKupony.size()) {
+            throw new IndexOutOfBoundsException("Nieprawidłowy numer kuponu: " + nr);
+        }
+        return zakupioneKupony.get(nr);
     }
 }

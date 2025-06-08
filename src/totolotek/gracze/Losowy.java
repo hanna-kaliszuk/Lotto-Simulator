@@ -2,6 +2,8 @@ package totolotek.gracze;
 
 import totolotek.finanse.Kwota;
 import totolotek.kolektura.Kolektura;
+import wyjątki.BrakŚrodków;
+import wyjątki.NieprawidłoweDane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class Losowy extends Gracz {
     }
 
     @Override
-    public void kupKupon() {
+    public void kupKupon() throws NieprawidłoweDane, BrakŚrodków {
         Kolektura kolektura = wybierzLosowąKolekturę(ulubioneKolektury);
         int ileKuponów = random.nextInt(100) + 1; // losujemy liczbę kuponów od 1 do 100
 

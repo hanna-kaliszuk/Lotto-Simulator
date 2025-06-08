@@ -1,4 +1,4 @@
-package testy;
+package testy.done;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import totolotek.kupony.Kupon;
 import totolotek.kupony.Zakład;
 import wyjątki.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
