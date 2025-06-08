@@ -9,7 +9,7 @@ public class Blankiet {
 
     public Blankiet(List<Zakład> zakłady, int losowania) {
         this.zakłady = zakłady;
-        int ileLosowań = losowania;
+        this.ileLosowań = losowania;
     }
 
     @Override
@@ -25,9 +25,9 @@ public class Blankiet {
         for (int i = 1; i <= 10; i++) {
             sb.append(" [ ");
             if (i - 1 == ileLosowań) {
-                sb.append(String.format("%2d", i));
-            } else {
                 sb.append("--");
+            } else {
+                sb.append(String.format("%2d", i));
             }
             sb.append(" ] ");
         }
