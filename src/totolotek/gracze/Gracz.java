@@ -94,6 +94,8 @@ public abstract class Gracz {
         }
     }
 
+    // metody do testów
+
     public int ileKuponów() {
         return zakupioneKupony.size();
     }

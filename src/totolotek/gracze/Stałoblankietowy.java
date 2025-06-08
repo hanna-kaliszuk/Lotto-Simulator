@@ -14,8 +14,21 @@ public class Stałoblankietowy extends Gracz {
     private final int stała;
     int nrNastępnejKolektury;
 
-    public Stałoblankietowy(String imię, String nazwisko, int pesel, Kwota środki, Blankiet blankiet, int stała, ArrayList<Kolektura> ulubioneKolektury) {
+    public Stałoblankietowy(String imię, String nazwisko, int pesel, Kwota środki, Blankiet blankiet, int stała, ArrayList<Kolektura> ulubioneKolektury) throws NieprawidłoweDane {
         super(imię, nazwisko, pesel, środki);
+
+        if (blankiet == null) {
+            throw new NieprawidłoweDane("Blankiet nie może być null.");
+        }
+
+        if (stała <= 0) {
+            throw new NieprawidłoweDane("Stała musi być dodatnią liczbą całkowitą. Podano: " + stała);
+        }
+
+        if (ulubioneKolektury == null || ulubioneKolektury.isEmpty()) {
+            throw new NieprawidłoweDane("Lista ulubionych kolektur nie może być null lub pusta.");
+        }
+
         this.blankiet = blankiet;
         this.stała = stała;
         this.nrNastępnejKolektury = 0; // zaczynamy od pierwszej kolektury
@@ -34,6 +47,7 @@ public class Stałoblankietowy extends Gracz {
         return kolejna;
     }
 
+    // metody do testów
     public int getCoIleLosowań() {
         return stała;
     }
