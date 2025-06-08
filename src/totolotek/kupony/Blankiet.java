@@ -1,13 +1,23 @@
 package totolotek.kupony;
 
+import wyjątki.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Blankiet {
-    private int ileLosowań;
-    private List<Zakład> zakłady;
+    private final int ileLosowań;
+    private final List<Zakład> zakłady;
 
-    public Blankiet(List<Zakład> zakłady, int losowania) {
+    public Blankiet(List<Zakład> zakłady, int losowania) throws NieprawidłoweDaneZakładu, NieprawidłoweDaneLosowania {
+        if (zakłady == null || zakłady.isEmpty()) {
+            throw new NieprawidłoweDaneZakładu("Lista zakładów nie może być pusta");
+        }
+
+        if (losowania < 1 || losowania > 10) {
+            throw new NieprawidłoweDaneLosowania("Liczba losowań musi być w zakresie od 1 do 10");
+        }
+
         this.zakłady = zakłady;
         this.ileLosowań = losowania;
     }
@@ -24,7 +34,7 @@ public class Blankiet {
         sb.append("Liczba losowań: ");
         for (int i = 1; i <= 10; i++) {
             sb.append(" [ ");
-            if (i - 1 == ileLosowań) {
+            if (i == ileLosowań) {
                 sb.append("--");
             } else {
                 sb.append(String.format("%2d", i));
@@ -37,11 +47,13 @@ public class Blankiet {
 
     public int ileWażnychZakładów() {
         int licznik = 0;
+
         for (Zakład z : zakłady) {
             if (z.jestWażny() && !z.czyAnulowany()) {
                 licznik++;
             }
         }
+
         return licznik;
     }
 
@@ -49,11 +61,13 @@ public class Blankiet {
         return ileLosowań;
     }
 
-    public List<Zakład> getZakłady() {
+    public List<Zakład> getZakłady() throws NieprawidłoweDaneZakładu {
         List<Zakład> kopia = new ArrayList<>(zakłady.size());
+
         for (Zakład z : zakłady) {
             kopia.add(new Zakład(z.getLiczby()));
         }
+
         return kopia;
     }
 }
