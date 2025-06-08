@@ -56,7 +56,6 @@ public class Wynik {
         System.out.println(this);
     }
 
-
     public int[] getWylosowaneLiczby() {
         return losowanie.getWylosowaneLiczby();
     }

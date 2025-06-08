@@ -1,6 +1,5 @@
 package totolotek.centrala.losowanie;
 
-import totolotek.centrala.Centrala;
 import totolotek.kolektura.Kolektura;
 import totolotek.kupony.Kupon;
 import totolotek.kupony.Zakład;
@@ -11,13 +10,15 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class Losowanie {
-    private static final Centrala centrala = Centrala.getInstancja();
     private final int nrLosowania;
     private final int[] wylosowaneLiczby;
     private List<Kupon> kuponyBiorąceUdział;
     private List<Zakład> zakładyBiorąceUdział;
 
-    public Losowanie (int nr) {
+    public Losowanie (int nr) throws NieprawidłoweDane {
+        if (nr <= 0) {
+            throw new NieprawidłoweDane("Numer losowania musi być większy niż 0");
+        }
         this.nrLosowania = nr;
         this.wylosowaneLiczby = this.wylosujLiczby();
         Arrays.sort(wylosowaneLiczby);
