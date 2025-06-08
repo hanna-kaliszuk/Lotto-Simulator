@@ -18,7 +18,20 @@ public abstract class Gracz {
     protected List<Kupon> zakupioneKupony;
     protected List<Kolektura> ulubioneKolektury;
 
-    public Gracz(String imię, String nazwisko, int pesel, Kwota środki) {
+    public Gracz(String imię, String nazwisko, int pesel, Kwota środki) throws NieprawidłoweDane {
+        if (imię == null) {
+            throw new NieprawidłoweDane("Imię nie może być null.");
+        }
+        if (nazwisko == null) {
+            throw new NieprawidłoweDane("Nazwisko nie może być null.");
+        }
+        if (pesel <= 0) {
+            throw new NieprawidłoweDane("PESEL musi być dodatnią liczbą całkowitą.");
+        }
+        if (środki == null) {
+            throw new NieprawidłoweDane("Środki finansowe nie mogą być null.");
+        }
+
         this.imię = imię;
         this.nazwisko = nazwisko;
         this.pesel = pesel;
@@ -55,7 +68,6 @@ public abstract class Gracz {
         return (this.środki.porównaj(kwota) >= 0);
     }
 
-
     public void zapłać(Kwota cena) {
         this.środki.odejmij(cena);
     }
@@ -71,11 +83,7 @@ public abstract class Gracz {
     }
 
     public void odbierzŚrodki(Kwota łącznaWygrana) {
-        if (łącznaWygrana != null) {
             this.środki.dodaj(łącznaWygrana);
-        } else {
-            throw new IllegalArgumentException("Łączna wygrana nie może być null.");
-        }
     }
 
     public void oddajKupon(Kupon kupon) {
@@ -95,5 +103,25 @@ public abstract class Gracz {
             throw new IndexOutOfBoundsException("Nieprawidłowy numer kuponu: " + nr);
         }
         return zakupioneKupony.get(nr);
+    }
+
+    public String getImię() {
+        return imię;
+    }
+
+    public String getNazwisko() {
+        return nazwisko;
+    }
+
+    public long getPesel() {
+        return pesel;
+    }
+
+    public Kwota getŚrodkiFinansowe() {
+        return new Kwota(środki);
+    }
+
+    public int ileUlubionych() {
+        return ulubioneKolektury.size();
     }
 }

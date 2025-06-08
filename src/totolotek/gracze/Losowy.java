@@ -10,9 +10,15 @@ import java.util.List;
 import java.util.Random;
 
 public class Losowy extends Gracz {
-    private static Random random = new Random();
-    public Losowy(String imię, String nazwisko, int pesel, ArrayList<Kolektura> ulubioneKolektury) {
+    private static final Random random = new Random();
+
+    public Losowy(String imię, String nazwisko, int pesel, ArrayList<Kolektura> ulubioneKolektury) throws NieprawidłoweDane {
         super(imię, nazwisko, pesel, wygenerujLosoweŚrodki());
+
+        if (ulubioneKolektury == null || ulubioneKolektury.isEmpty()) {
+            throw new NieprawidłoweDane("Lista ulubionych kolektur nie może być pusta.");
+        }
+
         this.ulubioneKolektury = ulubioneKolektury;
     }
 
@@ -24,14 +30,18 @@ public class Losowy extends Gracz {
     }
 
     @Override
-    public void kupKupon() throws NieprawidłoweDane, BrakŚrodków {
+    public void kupKupon() throws NieprawidłoweDane {
         Kolektura kolektura = wybierzLosowąKolekturę(ulubioneKolektury);
         int ileKuponów = random.nextInt(100) + 1; // losujemy liczbę kuponów od 1 do 100
 
         for (int i = 0; i < ileKuponów; i++) {
-            int ileZakładów = random.nextInt(8) + 1;
-            int ileLosowań = random.nextInt(10) + 1;
-            kolektura.sprzedajKuponChybiłTrafił(ileZakładów, ileLosowań, this);
+            try {
+                int ileZakładów = random.nextInt(8) + 1;
+                int ileLosowań = random.nextInt(10) + 1;
+                kolektura.sprzedajKuponChybiłTrafił(ileZakładów, ileLosowań, this);
+            } catch (BrakŚrodków e) {
+                continue;
+            }
         }
     }
 
