@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class Zakład {
-    private int[] liczby;
+    private final int[] liczby;
     private boolean anulowany;
 
     public Zakład(int[] liczby) throws NieprawidłoweDane {

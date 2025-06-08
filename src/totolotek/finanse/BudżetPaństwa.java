@@ -29,10 +29,9 @@ public class BudżetPaństwa {
     }
 
     public String raport() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Pobrane podatki: ").append(pobranePodatki).append("\n");
-        sb.append("Wydane subwencje: ").append(wydaneSubwencje).append("\n");
-        return sb.toString();
+        String sb = "Pobrane podatki: " + pobranePodatki + "\n" +
+                "Wydane subwencje: " + wydaneSubwencje + "\n";
+        return sb;
     }
 
     @Override

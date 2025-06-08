@@ -187,10 +187,9 @@ public class Centrala {
     }
 
     public String sprawozdzanieFinansowe() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Centrala posiada obecnie: ");
-        sb.append(środki);
-        return sb.toString();
+        String sb = "Centrala posiada obecnie: " +
+                środki;
+        return sb;
     }
 
     public void zarejestrujKolekturę(Kolektura k) {

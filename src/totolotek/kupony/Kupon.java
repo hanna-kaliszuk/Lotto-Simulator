@@ -106,13 +106,12 @@ public class Kupon {
     }
 
     public String getSprawozdzanieKuponu() throws NieprawidłoweDane {
-        StringBuilder sb = new StringBuilder();
 
-        sb.append("Identyfikator kuponu: ").append(identyfikator).append("\n");
-        sb.append("Cena kuponu: ").append(cena).append("\n");
-        sb.append("W tym podatek: ").append(cena.getPodatek()).append("\n");
+        String sb = "Identyfikator kuponu: " + identyfikator + "\n" +
+                "Cena kuponu: " + cena + "\n" +
+                "W tym podatek: " + cena.getPodatek() + "\n";
 
-        return sb.toString();
+        return sb;
     }
 
     @Override

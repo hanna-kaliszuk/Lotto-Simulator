@@ -47,7 +47,7 @@ public abstract class Gracz {
         sb.append(imię).append(" ").append(nazwisko).append(" (PESEL: ").append(pesel).append(")\n");
 
         // informacje o środkach
-        sb.append("Środki: ").append(środki.toString()).append("\n");
+        sb.append("Środki: ").append(środki).append("\n");
 
         // informacje o kuponach
         if (zakupioneKupony.isEmpty()) {
