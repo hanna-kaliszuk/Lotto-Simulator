@@ -1,16 +1,18 @@
 package totolotek.finanse;
 
+import wyjątki.NieprawidłoweDane;
+
 public class BudżetPaństwa {
     private static BudżetPaństwa instancja;
     private Kwota pobranePodatki;
     private Kwota wydaneSubwencje;
 
-    private BudżetPaństwa() {
+    private BudżetPaństwa() throws NieprawidłoweDane {
         this.pobranePodatki = new Kwota(0, 0);
         this.wydaneSubwencje = new Kwota(0, 0);
     }
 
-    public static BudżetPaństwa getInstancja() {
+    public static BudżetPaństwa getInstancja() throws NieprawidłoweDane {
         if (instancja == null) {
             instancja = new BudżetPaństwa();
         }
@@ -41,7 +43,7 @@ public class BudżetPaństwa {
                 '}';
     }
 
-    public void resetujBudżet() {
+    public void resetujBudżet() throws NieprawidłoweDane {
         this.pobranePodatki = new Kwota(0, 0);
         this.wydaneSubwencje = new Kwota(0, 0);
     }

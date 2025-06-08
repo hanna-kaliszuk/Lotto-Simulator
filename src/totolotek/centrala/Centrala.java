@@ -12,7 +12,16 @@ import java.util.List;
 public class Centrala {
     private static Centrala instancja;
 
-    private final static BudżetPaństwa budżetPaństwa = BudżetPaństwa.getInstancja();
+    private final static BudżetPaństwa budżetPaństwa;
+
+    static {
+        try {
+            budżetPaństwa = BudżetPaństwa.getInstancja();
+        } catch (NieprawidłoweDane e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Kwota środki;
     private Kwota kumulacja;
 

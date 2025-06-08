@@ -1,6 +1,7 @@
 package totolotek.centrala.losowanie;
 
 import totolotek.finanse.Kwota;
+import wyjątki.NieprawidłoweDane;
 
 import java.util.Arrays;
 
@@ -29,8 +30,12 @@ public class Wynik {
 
         sb.append("Kwoty wygrane:\n");
         for (int i = 0; i < wygraneKwoty.length; i++) {
-            if (wygraneKwoty[i].porównaj(new Kwota(0, 0)) > 0) {
-                sb.append("Stopień ").append(i + 1).append(": ").append(wygraneKwoty[i]).append("\n");
+            try {
+                if (wygraneKwoty[i].porównaj(new Kwota(0, 0)) > 0) {
+                    sb.append("Stopień ").append(i + 1).append(": ").append(wygraneKwoty[i]).append("\n");
+                }
+            } catch (NieprawidłoweDane e) {
+                continue; // pomijamy błędne kwoty
             }
         }
 
@@ -60,7 +65,7 @@ public class Wynik {
         return losowanie.getNrLosowania();
     }
 
-    public Kwota getNagrodaZaTrafienia(int trafienia) {
+    public Kwota getNagrodaZaTrafienia(int trafienia) throws NieprawidłoweDane {
         if (trafienia < 0 || trafienia > 6) {
             throw new IllegalArgumentException("Trafienia muszą być w zakresie od 0 do 6");
         }
