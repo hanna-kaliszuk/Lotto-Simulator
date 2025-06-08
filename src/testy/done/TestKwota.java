@@ -1,4 +1,4 @@
-package testy;
+package testy.done;
 
 import org.junit.jupiter.api.Test;
 import totolotek.finanse.Kwota;
