@@ -39,7 +39,7 @@ public class TestGracza {
     }
 
     @Test
-    void testKonstruktoraStałoliczbowy() {
+    void testKonstruktoraStałoliczbowy() throws NieprawidłoweDane {
         Kwota środki = new Kwota(1000, 0);
         int[] ulubioneLiczby = {7, 14, 21, 28, 35, 42};
         ArrayList<Kolektura> kolektury = new ArrayList<>(Arrays.asList(new Kolektura(), new Kolektura()));
@@ -111,10 +111,10 @@ public class TestGracza {
     }
 
     @Test
-    void testOdbierzŚrodkiNagrody() {
+    void testOdbierzŚrodkiNagrody() throws NieprawidłoweDane {
         Kolektura kolektura = new Kolektura();
         int[] liczby = {7, 14, 21, 28, 35, 42};
-        ArrayList<Kolektura> kolektury = new ArrayList<>(Arrays.asList(kolektura));
+        ArrayList<Kolektura> kolektury = new ArrayList<>(List.of(kolektura));
 
         Stałoliczbowy gracz = new Stałoliczbowy("Paweł", "Szymański", 3344556,
                 new Kwota(100, 0), liczby, kolektury);
@@ -156,12 +156,12 @@ public class TestGracza {
         Kupon kupon = stałoliczbowy.getKupony(0);
         assertEquals(10, kupon.getNaIleLosowań(), "Kupon powinien być na 10 losowań");
         assertEquals(1, kupon.getZakłady().size(), "Kupon powinien mieć jeden zakład z ulubionymi liczbami");
-        assertArrayEquals(ulubioneLiczby, kupon.getZakłady().get(0).getLiczby(),
+        assertArrayEquals(ulubioneLiczby, kupon.getZakłady().getFirst().getLiczby(),
                 "Kupon powinien zawierać ulubione liczby");
     }
 
     @Test
-    void testKupKuponLosowy() throws NieprawidłoweDane, BrakŚrodków, BrakŚrodków {
+    void testKupKuponLosowy() throws NieprawidłoweDane {
         ArrayList<Kolektura> kolektury = new ArrayList<>(Arrays.asList(new Kolektura(), new Kolektura(), new Kolektura()));
         Losowy losowy = new Losowy("Michał", "Wójcik", 66778899, kolektury);
 
@@ -219,7 +219,7 @@ public class TestGracza {
     void testOgraniczeniaStałoliczbowy() throws NieprawidłoweDane, BrakŚrodków {
         Kolektura kolektura = new Kolektura();
         int[] liczby = {1, 2, 3, 4, 5, 6};
-        ArrayList<Kolektura> kolektury = new ArrayList<>(Arrays.asList(kolektura));
+        ArrayList<Kolektura> kolektury = new ArrayList<>(List.of(kolektura));
 
         Stałoliczbowy gracz = new Stałoliczbowy("Andrzej", "Duda", 778899001,
                 new Kwota(50, 0), liczby, kolektury); // Mało pieniędzy
@@ -228,9 +228,7 @@ public class TestGracza {
         assertEquals(1, gracz.ileKuponów(), "Pierwszy kupon powinien być kupiony");
 
         // Próba kupna drugiego kuponu przed zakończeniem losowań pierwszego
-        assertDoesNotThrow(() -> {
-            gracz.kupKupon();
-        }, "Nie powinien kupować drugiego kuponu przed zakończeniem pierwszego");
+        assertDoesNotThrow(gracz::kupKupon, "Nie powinien kupować drugiego kuponu przed zakończeniem pierwszego");
 
         assertEquals(1, gracz.ileKuponów(), "Nadal powinien mieć tylko jeden kupon");
     }

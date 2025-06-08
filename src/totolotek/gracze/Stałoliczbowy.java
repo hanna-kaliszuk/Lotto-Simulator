@@ -13,12 +13,23 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Stałoliczbowy extends Gracz {
-    private int[] ulubioneLiczby;
-    private final int LOSOWANIA = 10;
+    private final int[] ulubioneLiczby;
     private int nrNastępnejKolektury;
 
-    public Stałoliczbowy(String imię, String nazwisko, int pesel, Kwota środki, int[] ulubioneLiczby, ArrayList<Kolektura> ulubioneKolektury) {
+    public Stałoliczbowy(String imię, String nazwisko, int pesel, Kwota środki, int[] ulubioneLiczby, ArrayList<Kolektura> ulubioneKolektury) throws NieprawidłoweDane {
         super(imię, nazwisko, pesel, środki);
+        if (ulubioneLiczby == null || ulubioneLiczby.length == 0) {
+            throw new NieprawidłoweDane("Lista ulubionych liczb nie może być null lub pusta.");
+        }
+
+        if (ulubioneLiczby.length > 6) {
+            throw new NieprawidłoweDane("Maksymalnie 6 ulubionych liczb. Podano: " + ulubioneLiczby.length);
+        }
+
+        if (ulubioneKolektury == null || ulubioneKolektury.isEmpty()) {
+            throw new NieprawidłoweDane("Lista ulubionych kolektur nie może być null lub pusta.");
+        }
+
         Arrays.sort(ulubioneLiczby); // sortowanie ulubionych liczb
         this.ulubioneLiczby = ulubioneLiczby;
         this.nrNastępnejKolektury = 0; // początkowo brak kolektury
@@ -30,7 +41,9 @@ public class Stałoliczbowy extends Gracz {
         // sprawdzamy, czy ostatni zakupiony przez gracza kupon wziął udział we wszystkich losowaniach, w których miał
         if (!this.możeKupićNowy()) return;
         Kolektura kolektura = wybierzKolejnąKolekturę(ulubioneKolektury, nrNastępnejKolektury);
-        Blankiet blankiet = new Blankiet(wygenerujZakład(), LOSOWANIA);
+
+        int losowania = 10;
+        Blankiet blankiet = new Blankiet(wygenerujZakład(), losowania);
         kolektura.sprzedajKuponZBlankietu(blankiet, this);
     }
 
@@ -40,15 +53,11 @@ public class Stałoliczbowy extends Gracz {
         return kolejna;
     }
 
-    private List<Zakład> wygenerujZakład() {
-        try {
+    private List<Zakład> wygenerujZakład() throws NieprawidłoweDane {
             List<Zakład> zakłady = new ArrayList<>(1);
             Zakład zakład = new Zakład(ulubioneLiczby);
             zakłady.add(zakład);
             return zakłady;
-        } catch (NieprawidłoweDane e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private boolean możeKupićNowy() {
