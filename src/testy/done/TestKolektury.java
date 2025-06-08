@@ -1,4 +1,4 @@
-package testy;
+package testy.done;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -145,7 +145,7 @@ public class TestKolektury {
         }, "Powinno rzucić wyjątek MożliwaPróbaOszustwa, gdy kupon jest już zrealizowany");
     }
 
-    private Gracz generujGraczaZPieniędzmi(Kwota środki, Kolektura ulubiona) {
+    private Gracz generujGraczaZPieniędzmi(Kwota środki, Kolektura ulubiona) throws NieprawidłoweDane {
         return new Minimalista("Test", "Gracz", 123456, środki, ulubiona);
     }
 }

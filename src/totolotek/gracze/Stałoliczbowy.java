@@ -59,4 +59,8 @@ public class Stałoliczbowy extends Gracz {
         Kupon ostatniKupon = zakupioneKupony.getLast();
         return ostatniKupon.czyWziąłUdziałWeWszystkichLosowaniach();
     }
+
+    public int[] getUlubioneLiczby() {
+        return Arrays.copyOf(ulubioneLiczby, ulubioneLiczby.length);
+    }
 }

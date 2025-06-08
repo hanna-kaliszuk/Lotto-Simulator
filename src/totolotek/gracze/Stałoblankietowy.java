@@ -33,4 +33,8 @@ public class Stałoblankietowy extends Gracz {
         this.nrNastępnejKolektury = (nr + 1) % ulubione.size(); // przechodzimy do następnej kolektury
         return kolejna;
     }
+
+    public int getCoIleLosowań() {
+        return stała;
+    }
 }
