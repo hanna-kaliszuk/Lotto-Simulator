@@ -22,7 +22,7 @@ public class Centrala {
 
     private int nrOstatniegoLosowania;
 
-    private Centrala(Kwota kwota) {
+    private Centrala(Kwota kwota) throws NieprawidłoweDane {
         this.środki = kwota;
         this.kumulacja = new Kwota(0, 0);
         this.historiaLosowań = new LinkedList<>();
@@ -41,7 +41,7 @@ public class Centrala {
     }
 
 
-    public static void inicjalizujCentralę(Kwota k) {
+    public static void inicjalizujCentralę(Kwota k) throws NieprawidłoweDane {
         if (instancja == null) {
             instancja = new Centrala(k);
         }
@@ -55,7 +55,7 @@ public class Centrala {
         return instancja;
     }
 
-    public void przeprowadźLosowanie() {
+    public void przeprowadźLosowanie() throws NieprawidłoweDane {
         // 1. inkrementujemy nr losowania
         nrOstatniegoLosowania++;
         int nrLosowania = nrOstatniegoLosowania;
@@ -129,7 +129,7 @@ public class Centrala {
         historiaLosowań.add(wynik);
     }
 
-    private Kwota obliczPulęBazową(Losowanie losowanie) {
+    private Kwota obliczPulęBazową(Losowanie losowanie) throws NieprawidłoweDane {
         int ileZakładów = losowanie.ileZakładów();
 
         Kwota pula = new Kwota(ileZakładów * 3, 0);
@@ -141,32 +141,32 @@ public class Centrala {
         return pula;
     }
 
-    private Kwota obliczZysk(Kwota pula) {
+    private Kwota obliczZysk(Kwota pula) throws NieprawidłoweDane {
         Kwota zysk = new Kwota(pula);
         zysk.pomnóż(0.49);
         return zysk;
     }
 
-    private Kwota obliczPulę(Kwota p) {
+    private Kwota obliczPulę(Kwota p) throws NieprawidłoweDane {
         Kwota pula = new Kwota(p);
         pula.dodaj(kumulacja);
         return pula;
     }
 
-    private Kwota obliczPulęI(Kwota pb) {
+    private Kwota obliczPulęI(Kwota pb) throws NieprawidłoweDane {
         Kwota pI = new Kwota(pb);
         pI.pomnóż(0.44);
         pI.dodaj(kumulacja);
         return pI;
     }
 
-    private Kwota obliczPulęII(Kwota pb) {
+    private Kwota obliczPulęII(Kwota pb) throws NieprawidłoweDane {
         Kwota pII = new Kwota(pb);
         pII.pomnóż(0.08);
         return pII;
     }
 
-    private Kwota obliczPulęIII(Kwota pula, Kwota pI, Kwota pII, Kwota pIV) {
+    private Kwota obliczPulęIII(Kwota pula, Kwota pI, Kwota pII, Kwota pIV) throws NieprawidłoweDane {
         Kwota pIII = new Kwota(pula);
         pIII.odejmij(pI);
         pIII.odejmij(pII);
@@ -174,7 +174,7 @@ public class Centrala {
         return pIII;
     }
 
-    private Kwota obliczPulęIV(Losowanie losowanie) {
+    private Kwota obliczPulęIV(Losowanie losowanie) throws NieprawidłoweDane {
         int ileTrafień = losowanie.getTrafienia(4);
         return new Kwota(24 * ileTrafień, 0);
     }
@@ -197,7 +197,7 @@ public class Centrala {
         listaKolektur.add(k);
     }
 
-    public void wydajNagrodę(Kwota nagroda) {
+    public void wydajNagrodę(Kwota nagroda) throws NieprawidłoweDane {
         if (środki.porównaj(nagroda) >= 0) {
             środki.odejmij(nagroda);
         } else {

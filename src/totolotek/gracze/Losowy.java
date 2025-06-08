@@ -22,7 +22,7 @@ public class Losowy extends Gracz {
         this.ulubioneKolektury = ulubioneKolektury;
     }
 
-    private static Kwota wygenerujLosoweŚrodki() {
+    private static Kwota wygenerujLosoweŚrodki() throws NieprawidłoweDane {
         int złote = random.nextInt(1_000_000);
         int grosze = random.nextInt(100);
 

@@ -119,7 +119,7 @@ public abstract class Gracz {
         return pesel;
     }
 
-    public Kwota getŚrodkiFinansowe() {
+    public Kwota getŚrodkiFinansowe() throws NieprawidłoweDane {
         return new Kwota(środki);
     }
 

@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestKolektury {
     @BeforeEach
-    void setUp() {
+    void setUp() throws NieprawidłoweDane {
         Centrala.resetInstancji();
         Centrala.inicjalizujCentralę(new Kwota(1_000_000, 0));
         Kolektura.resetujNumerację();

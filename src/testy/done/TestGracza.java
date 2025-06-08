@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestGracza {
     @BeforeAll
-    static void setUp() {
+    static void setUp() throws NieprawidłoweDane {
         Centrala.resetInstancji();
         Centrala.inicjalizujCentralę(new Kwota(1_000_000, 0));
         Kolektura.resetujNumerację();
