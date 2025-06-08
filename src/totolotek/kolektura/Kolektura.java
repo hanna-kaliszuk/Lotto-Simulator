@@ -128,7 +128,7 @@ public class Kolektura {
         return liczby;
     }
 
-    private void przekażŚrodki(Kwota kwota) {
+    private void przekażŚrodki(Kwota kwota) throws NieprawidłoweDane {
         Kwota podatek = new Kwota(kwota);
         podatek.pomnóż(0.20); // 20% podatek
         BudżetPaństwa.getInstancja().dodajPodatek(podatek);
@@ -201,7 +201,7 @@ public class Kolektura {
 
     }
 
-    private Kwota obliczNagrodę(int trafienia, Wynik wynik) {
+    private Kwota obliczNagrodę(int trafienia, Wynik wynik) throws NieprawidłoweDane {
         Kwota nagroda = new Kwota(0, 0);
 
         if (trafienia < 3) {
@@ -211,7 +211,7 @@ public class Kolektura {
         return wynik.getNagrodaZaTrafienia(trafienia);
     }
 
-    private Kwota odprowadźPodatekZaNagrodę(Kwota nagrodaZaZakład) {
+    private Kwota odprowadźPodatekZaNagrodę(Kwota nagrodaZaZakład) throws NieprawidłoweDane {
         Kwota podatek = new Kwota(nagrodaZaZakład);
 
         podatek.pomnóż(0.10); // 10% podatek od nagrody

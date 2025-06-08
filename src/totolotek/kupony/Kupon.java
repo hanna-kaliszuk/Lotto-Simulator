@@ -52,7 +52,7 @@ public class Kupon {
         this.identyfikator = stwórzIdentyfikator(nrKuponu, kolekturaWystawiająca.getNrKolektury());
     }
 
-    private Kwota obliczCenę(List<Zakład> zakłady, int losowania) {
+    private Kwota obliczCenę(List<Zakład> zakłady, int losowania) throws NieprawidłoweDane {
         int ważneZakłady = 0;
 
         for (Zakład z : zakłady) {
@@ -105,7 +105,7 @@ public class Kupon {
         return suma;
     }
 
-    public String getSprawozdzanieKuponu() {
+    public String getSprawozdzanieKuponu() throws NieprawidłoweDane {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Identyfikator kuponu: ").append(identyfikator).append("\n");
@@ -197,7 +197,7 @@ public class Kupon {
         this.zrealizowany = true;
     }
 
-    public Kwota getCena() {
+    public Kwota getCena() throws NieprawidłoweDane {
         return new Kwota(cena);
     }
 }

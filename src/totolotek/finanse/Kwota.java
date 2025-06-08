@@ -1,22 +1,20 @@
 package totolotek.finanse;
 
+import wyjątki.NieprawidłoweDane;
+
 public class Kwota {
     private long grosze;
 
-    public Kwota(long złote, int grosze) {
+    public Kwota(long złote, int grosze) throws NieprawidłoweDane {
         if (grosze < 0 || grosze >= 100) {
-            throw new IllegalArgumentException("Grosze muszą być z zakresu 0-99");
+            throw new NieprawidłoweDane("Grosze muszą być z zakresu 0-99. Podano: " + grosze);
         }
+
         this.grosze = 100 * złote + grosze;
     }
 
-    public Kwota(Kwota k) {
+    public Kwota(Kwota k) throws NieprawidłoweDane {
         this(k.getZłote(), k.getGrosze());
-    }
-
-    // Konstruktor pomocniczy dla operacji wewnętrznych
-    private Kwota(long totalGrosze) {
-        this.grosze = totalGrosze;
     }
 
     public void dodaj(Kwota inna) {
@@ -43,18 +41,13 @@ public class Kwota {
         return grosze / 100;
     }
 
-    // Metoda do sprawdzenia, czy kwota jest ujemna
-    public boolean saldoUjemne() {
-        return grosze < 0;
-    }
-
     // Metoda do porównywania kwot
     public int porównaj(Kwota inna) {
         return Long.compare(this.grosze, inna.grosze);
     }
 
     // Metoda do sprawdzenia, czy kwota jest > 0
-    public boolean kwotaNieujemna() {
+    public boolean kwotaNieujemna() throws NieprawidłoweDane {
         Kwota zero = new Kwota(0, 0);
         return this.porównaj(zero) > 0;
     }
@@ -63,6 +56,7 @@ public class Kwota {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
+
         Kwota kwota = (Kwota) obj;
         return grosze == kwota.grosze;
     }
@@ -80,15 +74,7 @@ public class Kwota {
         this.grosze = this.grosze / dzielnik;
     }
 
-    public void podziel(double dzielnik) {
-        if (dzielnik == 0.0) {
-            throw new IllegalArgumentException("Nie można dzielić przez zero");
-        }
-
-        this.grosze = Math.round(this.grosze / dzielnik);
-    }
-
-    public Kwota getPodatek() {
+    public Kwota getPodatek() throws NieprawidłoweDane {
         Kwota podatek = new Kwota(this);
         podatek.pomnóż(0.20);
         return podatek;

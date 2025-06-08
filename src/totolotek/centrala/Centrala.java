@@ -4,6 +4,7 @@ import totolotek.centrala.losowanie.*;
 import totolotek.finanse.BudżetPaństwa;
 import totolotek.finanse.Kwota;
 import totolotek.kolektura.Kolektura;
+import wyjątki.NieprawidłoweDane;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -211,7 +212,7 @@ public class Centrala {
         return nrOstatniegoLosowania + 1;
     }
 
-    public void dodajŚrodki(Kwota doCentali) {
+    public void dodajŚrodki(Kwota doCentali) throws NieprawidłoweDane {
         if (doCentali.kwotaNieujemna()) {
             this.środki.dodaj(doCentali);
         } else {
