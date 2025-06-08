@@ -1,4 +1,4 @@
-package testy;
+package testy.done;
 
 import totolotek.kupony.Zakład;
 import org.junit.jupiter.api.Test;

@@ -3,7 +3,9 @@ package testy;
 import org.junit.jupiter.api.Test;
 import totolotek.kupony.Blankiet;
 import totolotek.kupony.Zakład;
+import wyjątki.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,20 +13,35 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestBlankietu {
     @Test
-    void testKonstruktora() {
+    void testKonstruktora() throws NieprawidłoweDaneZakładu, NieprawidłoweDaneLosowania {
         List<Zakład> zakłady = Arrays.asList(
             new Zakład(new int[]{1, 2, 3, 4, 5, 6}),
             new Zakład(new int[]{7, 8, 9, 10, 11, 12})
         );
 
         Blankiet blankiet = new Blankiet(zakłady, 3);
-
         assertEquals(3, blankiet.getIleLosowań(), "Blankiet powinien obejmować 3 losowania");
         assertEquals(2, blankiet.getZakłady().size(), "Blankiet powinien zawierać 2 zakłady");
+
+        assertThrows(NieprawidłoweDaneZakładu.class, () -> new Blankiet(null, 3),
+                "Powinno rzucić wyjątek przy próbie utworzenia blankietu nullem jako listą zakładów");
+
+        List<Zakład> pusteZakłady = new ArrayList<>();
+        assertThrows(NieprawidłoweDaneZakładu.class, () -> new Blankiet(pusteZakłady, 3),
+                "Powinno rzucić wyjątek przy próbie utworzenia blankietu z pustą listą zakładów");
+
+        assertThrows(NieprawidłoweDaneLosowania.class, () -> new Blankiet(zakłady, 0),
+                "Powinno rzucić wyjątek przy próbie utworzenia blankietu z liczbą losowań mniejszą niż 1");
+
+        assertThrows(NieprawidłoweDaneLosowania.class, () -> new Blankiet(zakłady, -1),
+                "Powinno rzucić wyjątek przy próbie utworzenia blankietu z ujemną liczbą losowań");
+
+        assertThrows(NieprawidłoweDaneLosowania.class, () -> new Blankiet(zakłady, 11),
+                "Powinno rzucić wyjątek przy próbie utworzenia blankietu z liczbą losowań większą niż 10");
     }
 
     @Test
-    void testWażnościZakładów() {
+    void testWażnościZakładów() throws NieprawidłoweDaneZakładu, NieprawidłoweDaneLosowania {
         Zakład ważny = new Zakład(new int[]{1, 2, 3, 4, 5, 6});
         Zakład nieważny = new Zakład(new int[]{1, 2, 3, 4, 5}); // mniej niż 6 liczb
 
@@ -36,7 +53,7 @@ public class TestBlankietu {
     }
 
     @Test
-    void testToString() {
+    void testToString() throws NieprawidłoweDaneZakładu, NieprawidłoweDaneLosowania {
         Zakład zakład1 = new Zakład(new int[]{1, 5, 7, 45, 23, 28});
         Zakład zakład2 = new Zakład(new int[]{2, 4, 6, 8, 10, 12});
         zakład2.anuluj();
