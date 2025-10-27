@@ -1,5 +1,13 @@
 # TOTOLOTEK 
-Zadanie zaliczeniowe z przedmiotu Programowanie Obiektowe realizowanego w semestrze letnim 2024/25. 
+Zadanie zaliczeniowe z przedmiotu Programowanie Obiektowe realizowanego w semestrze letnim 2024/25.
+
+## Zadanie
+Zadaniem było zaprojektowanie i zaimplementowanie klasy realizującej opisany w poniższej specyfikacji system Totolotka, zaimplementować główną metodę programu oraz napisać kod wykonujący w JUnit testy poszczególnych składników systemu. Główna metoda programu miała zaprezentować zaimplementowane klasy w działaniu poprzez:
+- utworzenie centrali Totolotka i 10 kolektur,
+- utworzenie po 200 graczy każdego rodzaju, przydzielając ich mniej więcej po równo między wszystkie kolektury,
+- przeprowadzenie 20 losowań, poprzedzając każde z nich kupowaniem kuponów przez graczy
+- sprawdzenie po każdym losowaniu przez każdego z graczy, czy któryś z jego kuponów ma już wykonane wszsytkie losowania. Jeżeli tak, i jeżeli ten kupon coś wygrał, gracz powinien zgłosić się po wygraną,
+- wypisanie na koniec: pełną informację z centrali o przeprowadzonych losowaniech, dotychczasową wielkość wpływów do budżetu państwa, dotychczasową kwotę subwencji pobranej przez centralę z budżetu.
 
 ## Opis ogólny 
 Celem zadania było stworzenie klas pozwalających na realizację systemu gry Totolotek. Totolotek sprzedaje zakłady pozwalające na uczestnictwo w grze i przeprowadza cyklicznie losowania 6 różnych liczb z 49. Gracze chcący wziąć udział w losowaniu typują swoje 6 liczb - jeden taki zakupiony typ nazywamy zakładem. Zakłady sprzedawane są jedynie poprzez sieć punktów zwanych kolekturami i jedynie w formie kuponów na okaziciela. Kupon może zawierać kilka zakładów i może obejmować więcej niż 1 losowanie. Pojedynczy zakład kosztuje 3 zł, z czego 0,60 zł to podatek, który Totolotek musi odprowadzić do budżetu państwa. Reszta zostaje do dyspozycji centrali Totolotka (na wygrane i zysk). Za każde trafienie trzech, czterech, pięciu lub sześciu liczb w pojedynczym zakładzie wypłacana jest nagroda, zwana odpowiednio nagrodą IV, III, II i I stopnia. Kolejne sekcje opisują dokładniej poszczególne elementy systemu.
@@ -76,4 +84,6 @@ System powinien mieć możliwość łatwego dodawania innych rodzajów graczy.
 Pobiera podatki i przekazuje subwencje. Potrafi także wypisywać łączną kwotę pobranych podatków i łączną kwotę przekazanych subwencji.
 
 Zakładamy, że budżet państwa jest nieporównywalnie większy niż kwoty, którymi operuje nasza loteria, i nie musimy modelować konkretnej kwoty, którą budżet dysponuje.
+
+ 
 
