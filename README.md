@@ -1,4 +1,5 @@
 # Lotto Simulator
+![CI](https://github.com/hanna-kaliszuk/Lotto-Simulator/actions/workflows/maven.yml/badge.svg?branch=final-version)
 
 A Java-based simulation of a lottery system, modelling the interaction between players, lottery outlets, the central lottery office, tickets, drawings, prizes, and public finances.
 
