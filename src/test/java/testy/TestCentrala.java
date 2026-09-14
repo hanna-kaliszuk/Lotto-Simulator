@@ -24,6 +24,7 @@ public class TestCentrala {
     @BeforeEach
     void setUp() throws NieprawidłoweDane {
         Centrala.resetInstancji();
+        Kolektura.resetujNumerację();
         BudżetPaństwa.getInstancja().resetujBudżet();
     }
 
