@@ -1,89 +1,256 @@
-# TOTOLOTEK 
-Zadanie zaliczeniowe z przedmiotu Programowanie Obiektowe realizowanego w semestrze letnim 2024/25.
+# Lotto Simulator
 
-## Zadanie
-Zadaniem było zaprojektowanie i zaimplementowanie klasy realizującej opisany w poniższej specyfikacji system Totolotka, zaimplementować główną metodę programu oraz napisać kod wykonujący w JUnit testy poszczególnych składników systemu. Główna metoda programu miała zaprezentować zaimplementowane klasy w działaniu poprzez:
-- utworzenie centrali Totolotka i 10 kolektur,
-- utworzenie po 200 graczy każdego rodzaju, przydzielając ich mniej więcej po równo między wszystkie kolektury,
-- przeprowadzenie 20 losowań, poprzedzając każde z nich kupowaniem kuponów przez graczy
-- sprawdzenie po każdym losowaniu przez każdego z graczy, czy któryś z jego kuponów ma już wykonane wszsytkie losowania. Jeżeli tak, i jeżeli ten kupon coś wygrał, gracz powinien zgłosić się po wygraną,
-- wypisanie na koniec: pełną informację z centrali o przeprowadzonych losowaniech, dotychczasową wielkość wpływów do budżetu państwa, dotychczasową kwotę subwencji pobranej przez centralę z budżetu.
+A Java-based simulation of a lottery system, modelling the interaction between players, lottery outlets, the central lottery office, tickets, drawings, prizes, and public finances.
 
-## Opis ogólny 
-Celem zadania było stworzenie klas pozwalających na realizację systemu gry Totolotek. Totolotek sprzedaje zakłady pozwalające na uczestnictwo w grze i przeprowadza cyklicznie losowania 6 różnych liczb z 49. Gracze chcący wziąć udział w losowaniu typują swoje 6 liczb - jeden taki zakupiony typ nazywamy zakładem. Zakłady sprzedawane są jedynie poprzez sieć punktów zwanych kolekturami i jedynie w formie kuponów na okaziciela. Kupon może zawierać kilka zakładów i może obejmować więcej niż 1 losowanie. Pojedynczy zakład kosztuje 3 zł, z czego 0,60 zł to podatek, który Totolotek musi odprowadzić do budżetu państwa. Reszta zostaje do dyspozycji centrali Totolotka (na wygrane i zysk). Za każde trafienie trzech, czterech, pięciu lub sześciu liczb w pojedynczym zakładzie wypłacana jest nagroda, zwana odpowiednio nagrodą IV, III, II i I stopnia. Kolejne sekcje opisują dokładniej poszczególne elementy systemu.
+The project focuses on **object-oriented design, domain modelling, exception handling, and automated testing**. It also includes a large-scale simulation demonstrating the complete flow of the system.
 
-### Centrala Totolotka
-Centrala na swoją działalność dysponuje pewnymi środkami finansowymi. Może korzystać też z subwencji państwowych. Podstawową odpowiedzialnością centrali jest przeprowadzanie kolejnych losowań zwycięskich 6 liczb. Po każdym przeprowadzonym losowaniu centrala oblicza pulę nagród oraz wysokości wygranych każdego stopnia od I do IV. Są one obliczane w oparciu o łączną kwotę uzyskaną ze sprzedaży (minus podatek), przez wszystkie kolektury, wszystkich zakładów uczestniczących w danym losowaniu oraz w oparciu o liczby zakładów, które trafiły poszczególne wygrane I, II, III i IV stopnia. W obliczeniach tych uwzględniana jest także ewentualna kumulacja. Mechanizm kumulacji działa tak, że jeśli w danym losowaniu nikt nie trafi szóstki, to cała pula nagród I stopnia powiększa pulę I stopnia w kolejnym losowaniu, itd. Informacja o zwycięskiej szóstce, puli nagród I stopnia i kwotach wygranych każdego stopnia (tylko tych trafionych) muszą być dostępne publicznie. Centrala powinna ponadto potrafić wypisywać wyniki wszystkich przeprowadzonych losowań, wraz z podaniem:
+---
 
-- kwot wygranych każdego stopnia (tylko tych trafionych),
-- liczb zwycięskich zakładów dla wygranych każdego stopnia,
-- łącznej puli nagród każdego stopnia
-  
-oraz wypisywać stan swoich środków finansowych.
+## What is Lotto Simulator?
 
-### Odbiór wygranych 
-Gracz zgłasza się po odbiór wygranej (lub wygranych), okazując zwycięski kupon w kolekturze, w której wcześniej go zakupił. System powinien sprawdzić, że kupon faktycznie został wcześniej sprzedany w tej kolekturze (że gracz nie spreparował go sam) oraz że wygrana za kupon nie została już wcześniej wypłacona. W momencie odbierania wygranej gracz musi oddać kupon i nie może użyć go ponownie (system oznacza go jako zrealizowany). Jeśli gracz zrealizuje kupon przed nastąpieniem części losowań objętych kuponem, te losowania przepadają – gracz nie będzie mógł zgłosić się po nagrodę, nawet jeśli taka by mu przysługiwała. Wysokie nagrody (od 2280 zł za konkretny zakład w konkretnym losowaniu) są opodatkowane stawką 10% odprowadzaną do budżetu państwa (w momencie odbierania wygranej przez gracza). Niższe zaś są nieopodatkowane. Jeśli dany kupon upoważnia do odebrania więcej niż jednej nagrody – przykładowo jednej wysokiej (trafiona piątka zakładem nr 5 w losowaniu nr 3) oraz dwóch niskich (trafiona trójka zakładem nr 1 w losowaniu nr 3 oraz trafiona czwórka zakładem nr 5 w losowaniu nr 7) – to opodatkowaniu podlega tylko kwota wysokiej nagrody. Ze względu na regulacje o ochronie prywatności ani centrala, ani kolektury nie mogą przechowywać informacji o graczach. Gracz może w dowolnym momencie odebrać swoją nagrodę. Jeśli w którymś momencie zabraknie w centrali pieniędzy na wypłatę nagrody, to centrala powinna pobrać brakującą kwotę w formie subwencji z budżetu państwa.
+The application models a complete lottery system consisting of several cooperating components:
 
-### Losowanie
-Reprezentuje pojedyncze oficjalne losowanie. Każde losowanie ma swój unikatowy numer porządkowy (liczony od 1) i przechowuje swój wynik w postaci 6 liczb trzymanych w porządku rosnącym. Każde losowanie można przekształcić na napis, obejmujący numer losowania oraz wyniki zawierające wyrównane do prawej (z dodatkową spacją dla liczb jednocyfrowych) wylosowane liczby (zakończone spacją), np.
+- **Central Office (Centrala)** — coordinates lottery drawings, manages the system's finances, and stores drawing results.
+- **Lottery Outlets (Kolektury)** — sell lottery tickets and register transactions.
+- **Players (Gracze)** — use different playing strategies and purchase tickets.
+- **Tickets (Kupony)** — represent lottery entries and contain one or more bets.
+- **Draws (Losowania)** — generate lottery results and determine winning combinations.
+- **Public Budget (Budżet Państwa)** — provides subsidies when the Central Office does not have enough funds to pay a prize.
+- **Custom exceptions (Wyjątki)** — handle invalid operations and exceptional states.
 
-Losowanie nr 6901
-Wyniki:  5  8  9 28 31 47  
+The system supports several types of players with different behaviours:
 
-### Wysokość wygranych 
-51% wszystkich wpłat z zakładów (pomniejszonych o kwotę podatku) w danym losowaniu przeznaczane jest na nagrody, a reszta to zysk centrali.
+- **Random Player (Losowy)** - randomly chooses an outlet and buys a random number of Quick Pick (chybił-trafił) tickets with random numbers of bets and drawings.
+- **Minimalist Player (Minimalista)** - always buys one Quick Pick bet for the nearest deawing at the preferred outlet.
+- **Fixed-number Player (Stałoliczbowy)** - plays their six preffered numbers for the next ten drawings and buys a new ticket only after all its drawings have been completed.
+- **Fixed-slip Player (Stałoblankietowy)** - buys tickets based on their personal slip (`blankiet`) for a fixed number of drawings, rotating between their preffered outlets. 
 
-Kwota na nagrody dzielona jest następująco:
+The project contains a full simulation with **10 lottery outlets, 800 players and 20 consecutive drawings**.
 
-- 44% przeznaczane jest na nagrody I stopnia (trafione 6 liczb),
-- 8% rezerwowane jest na nagrody II stopnia (trafione 5 liczb),
-- każda nagroda IV stopnia (trafione 3 liczby) jest równa dokładnie 24,00 zł,
-- reszta przeznaczana jest na nagrody III stopnia (trafione 4 liczby).
-Pula na nagrody I stopnia jest gwarantowana i wynosi minimum 2 mln. zł (nie wpływa to na wielkości pul pozostałych stopni wyliczone wyżej). Każda z pul na nagrody I, II i III stopnia dzielona jest po równo między zakłady z odpowiednią liczbą trafień (a w zasadzie posiadających je graczy). Pojedyncza nagroda III stopnia nie może być niższa niż 15x stawki za jeden zakład (15 x 2,40 = 36,00 zł). Jeśli w losowaniu nie padnie wygrana I stopnia, to jej pula powiększa pulę na nagrody I stopnia w kolejnym losowaniu (kumulacja). Jeśli w centrali brakuje środków na nagrody, to korzysta ona z subwencji, w brakującej kwocie, z budżetu państwa.
+---
 
-Przy wszelkiego rodzaju obliczeniach procentowych oraz przy podziale puli między graczy, jeśli wychodzi niecałkowita liczba groszy, w tym zadaniu należy zaokrąglić w dół do pełnego grosza.
+## Key Features
 
-### Kolektura 
-Kolektura jest miejscem, gdzie można kupić kupon, zawierający wytypowane liczby (pogrupowane w zakłady) i upoważniający do uczestnictwa w grze i ewentualnego odbioru wygranych. Nagroda za zwycięski kupon może być wypłacona jedynie w kolekturze, w której został on nabyty.
+- Object-oriented domain model of a lottery system
+- Multiple player types with different playing strategies
+- Lottery ticket and bet management
+- Random lottery drawings
+- Prize calculation and redemption
+- Central financial management
+- Public-budget subsidies when the Central Office cannot cover a prize
+- Custom exception handling for invalid operations
+- Detailed financial reporting
+- Drawing history
+- Automated unit tests with JUnit 5
+- Full end-to-end simulation of the system
 
-Każda kolektura ma unikatowy numer oraz przechowuje w swojej bazie wszystkie sprzedane przez siebie kupony. Kolektura wysyła wszystkie zyski natychmiast do centrali; kwoty na wypłaty nagród pobiera również z centrali. Kolektura może mieć własny bufor finansowy, ale w tym zadaniu go nie modelujemy.
+### Central Office
 
-W ofercie kolektury jest sprzedaż kuponów dwojakiego rodzaju – kuponów generowanych w oparciu o specjalny blankiet wypełniany przez klienta oraz kuponów na tzw. "chybił-trafił". W tym drugim przypadku do sprzedaży kuponu wystarczy podać liczbę zakładów i liczbę losowań. W pojedynczej transakcji sprzedaży można kupić tylko jeden kupon. Transakcja ta dochodzi do skutku tylko wtedy, gdy klient dysponuje środkami wystarczającymi na pokrycie ceny kuponu. Otrzymane środki ze sprzedaży, pomniejszone o podatek, trafiają do kasy Totolotka. Podatek trafia do budżetu państwa. Kupony są rejestrowane w bazie kolektury i przekazywane klientom tylko wtedy, gdy uiszczona została za nie zapłata.
+`Centrala` acts as the main coordinator of the lottery system. It manages registered lottery outlets, performs drawings, stores their results, and handles the financial side of prize payments.
 
-### Blankiet 
-Blankiet jest formularzem na podstawie którego kolektura może automatycznie wygenerować kupon dla klienta. Blankiet zawiera 8 ponumerowanych (od 1) pól reprezentujących poszczególne zakłady.
+### Players
 
-Pole zakładu zawiera 49 kratek, każda ponumerowana w środku liczbą z zakresu od 1 do 49, oraz jedną kratkę bez wypełnienia oznaczoną słowem "anuluj". Na pojedynczym blankiecie można zatem wytypować do 8 zakładów. Wytypowanie zakładu polega na wybraniu jednego z pól blankietu i skreśleniu na nim, poziomą kreską, wnętrza 6 kratek z liczbami. Liczba w skreślonej kratce jest tą, którą typujemy. Pole można anulować zaznaczając kratkę "anuluj". Zakład z takiego anulowanego pola nie będzie uwzględniony w wygenerowanym kuponie. Pole, na którym zaznaczono inną niż sześć liczbę kratek liczbowych, powinno być z automatu pomijane - nie trzeba go dodatkowo anulować.
+`Gracz` defines the common functionality of players, while specialized classes implement different playing behaviours.
 
-Oprócz tego, na dole blankietu znajduje się dodatkowe 10 kratek z liczbami od 1 do 10 opatrzonych wyrażeniem "Liczba losowań:". Można zaznaczyć jedną z tych liczb, w celu wybrania liczby losowań, w których mają brać udział zakłady wytypowane na blankiecie. Dopuszczalne jest zostawienie tych kratek bez zaznaczenia, co oznacza wybór tylko jednego losowania. Jeśli zaznaczonych zostanie więcej tych kratek, to obowiązuje ta z największą liczbą.
+```text
+Gracz
+├── Losowy
+├── Minimalista
+├── Stałoliczbowy
+└── Stałoblankietowy
+```
 
-### Kupon
-Kupon jest dokumentem (małą karteczką) wystawianym przez kolekturę, który przekazywany jest klientowi po uiszczeniu zapłaty za wytypowane zakłady. Kupon jest jedynym dokumentem pozwalającym graczowi na odbiór ewentualnej wygranej. Blankiet, z którego ewentualnie wygenerowano zwycięski kupon, nie daje takiej możliwości.
+### Tickets and Bets
 
-Każdy kupon ma unikatowy (w skali całego systemu) numer porządkowy nadawany podczas tworzenia. Numeracja kuponów zaczyna się od 1. W oparciu o ten numer i numer kolektury, która wystawiła kupon, tworzony jest identyfikator kuponu. Identyfikator ten jest napisem zawierającym kolejno numer kuponu, numer kolektury, losowy znacznik i sumę kontrolną, które są oddzielone znakiem '-'. Losowy znacznik zawiera 9 losowych cyfr. Generowany jest on raz podczas tworzenia kuponu. Suma kontrolna jest równa sumie cyfr w numerze kuponu, numerze kolektury i w znaczniku losowym, modulo 100, zapisanej z ewentualnym zerem wiodącym. Przykładowy identyfikator kuponu: 1959-790-959497998-09.
+Tickets (`Kupon`) contain bets (`Zakład`) and are associated with lottery drawings. Blank slips (`Blankiet`) can be used to define the bets submitted by players.
 
-Każdy kupon może zawierać od 1 do 8 zakładów, czyli zestawów 6 wytypowanych liczb. Ponadto może być zawarty na co najwyżej 10 kolejnych losowań, przy czym pierwszym losowaniem jest zawsze najbliższe losowanie. Klient płaci za kupon cenę równą cenie pojedynczego zakładu (w tym podatek), pomnożonych przez liczbę zakładów i liczbę losowań.
+### Financial System
 
-Kupon musi udostępniać publicznie informacje o swoim identyfikatorze, cenie i podatku jaki trafił do budżetu państwa. Wydruk kuponu powinien zawierać kolejno w wierszach: 
-1. identyfikator kuponu,
-2. ponumerowaną listę kolejnych zakładów (w osobnych wierszach, wylosowane liczby wyrównane do prawej),
-3. liczbę losowań,
-4. listę numerów losowań (w jednym wierszu),
-5. cenę brutto kuponu.
+The financial model separates the funds managed by the Central Office from the Public Budget.
 
-### Gracz
-Gracz jest osobą, która może w wybranej kolekturze kupować kupony. Każdy gracz ma imię, nazwisko i PESEL (nie trzeba sprawdzać poprawności PESELu) oraz dysponuje pewnymi środkami pieniężnymi. Przechowuje ponadto zakupione kupony.
+`Kwota` is used to represent monetary values, while `Centrala` and `Budżet Państwa` handle financial operations such as collecting payments, paying prizes, and covering insufficient funds through subsidies.
 
-Każdy gracz potrafi wypisać informacje o sobie, które zawierają: nazwisko, imię, PESEL, posiadane środki oraz listę identyfikatorów posiadanych kuponów lub informację o braku kuponów.
+### Drawings
 
-W Totolotka mogą grać gracze różnego rodzaju. Minimalista kupuje kupon zawsze w swojej ulubionej kolekturze. Obstawia wtedy tylko jeden zakład na chybił-trafił i tylko na jedno najbliższe losowanie. Gracz losowy w losowo wybranej kolekturze kupuje losową liczbę kuponów chybił-trafił (od 1 do 100 szt.); każdy kupon z losową liczbą zakładów i na losową liczbę losowań (w ramach ograniczeń kuponu). Gracz tego rodzaju dysponuje losowo wybraną początkową ilością środków (mniej od miliona zł). Gracz stałoliczbowy ma ulubione 6 liczb i za każdym razem wypełnia nowy blankiet obstawiający te liczby na 10 najbliższych losowań. Gracz ten kupuje nowy kupon dopiero wtedy, gdy przeprowadzone zostaną wszystkie losowania obstawione w poprzednim kuponie. Gracz stałoblankietowy ma swój blankiet i kupuje kupon zawsze w oparciu o ten blankiet, przy czym robi to co pewną stałą - sobie znaną - liczbę losowań. Każdy z graczy stałoliczbowych i stałoblankietowych ma kilka (jedną lub więcej) ulubionych kolektur, z których korzysta na zmianę po kolei (kolejny kupon kupuje w kolejnej ulubionej kolekturze; gdy odwiedzi wszystkie, zaczyna z powrotem od pierwszej).
+The drawing subsystem generates lottery results and keeps track of completed drawings through `Losowanie` and `Wynik`.
 
-System powinien mieć możliwość łatwego dodawania innych rodzajów graczy.
+---
 
-### Budżet Państwa
-Pobiera podatki i przekazuje subwencje. Potrafi także wypisywać łączną kwotę pobranych podatków i łączną kwotę przekazanych subwencji.
+## Simulation
 
-Zakładamy, że budżet państwa jest nieporównywalnie większy niż kwoty, którymi operuje nasza loteria, i nie musimy modelować konkretnej kwoty, którą budżet dysponuje.
+The project includes a dedicated demonstration program, `PrezentacjaDziałania`, which runs a larger simulation of the entire system.
 
- 
+The simulation creates:
 
+- **10 lottery outlets**
+- **200 Random Players**
+- **200 Minimalist Players**
+- **200 Fixed-number Players**
+- **200 Fixed-slip Players**
+- **20 lottery drawings**
+
+During each drawing cycle:
+
+1. Players purchase tickets.
+2. The Central Office performs a lottery drawing.
+3. Players' tickets are checked against the result.
+4. Winning prizes are redeemed through lottery outlets.
+5. The financial state of the system is updated.
+
+After all drawings, the program displays the drawing history, the state of the Public Budget, and the financial state of the Central Office.
+
+---
+
+## Testing
+
+The project uses **JUnit 5** for automated testing.
+
+The test suite covers the main domain components, including:
+
+- ticket and bet creation and validation
+- player behaviour
+- lottery outlet operations
+- lottery drawings and results
+- Central Office state and operations
+- financial calculations
+- Public Budget operations
+- invalid input handling
+- insufficient funds and subsidies
+- state reset and initialization
+- exceptional cases
+
+Tests are organized separately from the application code using the standard Maven project structure:
+
+```text
+src/
+├── main/
+│   └── java/
+└── test/
+    └── java/
+```
+
+Run the complete test suite with:
+
+```bash
+mvn test
+```
+
+---
+
+## Tech Stack
+
+- **Java**
+- **Maven**
+- **JUnit 5**
+
+---
+
+## Project Structure
+
+```text
+Lotto-Simulator/
+├── pom.xml
+├── README.md
+├── .gitignore
+│
+└── src/
+    ├── main/
+    │   └── java/
+    │       ├── główny/
+    │       │   ├── Main.java
+    │       │   └── PrezentacjaDziałania.java
+    │       │
+    │       ├── totolotek/
+    │       │   ├── centrala/
+    │       │   │   ├── Centrala.java
+    │       │   │   └── losowanie/
+    │       │   │       ├── Losowanie.java
+    │       │   │       └── Wynik.java
+    │       │   │
+    │       │   ├── finanse/
+    │       │   │   ├── BudżetPaństwa.java
+    │       │   │   └── Kwota.java
+    │       │   │
+    │       │   ├── gracze/
+    │       │   │   ├── Gracz.java
+    │       │   │   ├── Losowy.java
+    │       │   │   ├── Minimalista.java
+    │       │   │   ├── Stałoblankietowy.java
+    │       │   │   └── Stałoliczbowy.java
+    │       │   │
+    │       │   ├── kolektura/
+    │       │   │   └── Kolektura.java
+    │       │   │
+    │       │   └── kupony/
+    │       │       ├── Blankiet.java
+    │       │       ├── Kupon.java
+    │       │       └── Zakład.java
+    │       │
+    │       └── wyjątki/
+    │           ├── BrakŚrodków.java
+    │           ├── MożliwaPróbaOszustwa.java
+    │           └── NieprawidłoweDane.java
+    │
+    └── test/
+        └── java/
+            └── testy/
+                ├── TestBlankietu.java
+                ├── TestBudżetPaństwa.java
+                ├── TestCentrala.java
+                ├── TestGracza.java
+                ├── TestKolektury.java
+                ├── TestKuponu.java
+                ├── TestKwota.java
+                ├── TestLosowaniaOrazWyniku.java
+                └── ZakładTest.java
+```
+
+---
+
+## Running the Project
+
+### Requirements
+
+- **Java 21 or newer**
+- **Maven**
+
+### Run tests
+
+```bash
+mvn test
+```
+
+### Run the simulation
+
+The full system demonstration is implemented in:
+
+```text
+główny/PrezentacjaDziałania.java
+```
+
+Run its `main` method to start the full simulation.
+
+A smaller demonstration of a single player and a single drawing is available in:
+
+```text
+główny/Main.java
+```
+
+---
+
+## Project Goals
+
+The main goal of the project was to design a non-trivial object-oriented system with multiple interacting components and clearly separated responsibilities.
+
+Beyond implementing the required functionality, the project was extended with:
+
+- a larger end-to-end simulation,
+- a dedicated JUnit test suite,
+- Maven-based project management,
+- explicit handling of exceptional and financial edge cases.
+
+---
+
+## Academic Context
+
+Originally developed as part of the **Object-Oriented Programing (Programowanie Obiektowe)** course at the University of Warsaw.
